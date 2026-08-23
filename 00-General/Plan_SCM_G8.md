@@ -70,7 +70,7 @@ ISW-G8-2026/
 | Soluciones de Cátedra | Referencia | Solucion_[Tema].[ext] | 05-Ejercicios/TemplatesYSoluciones/ |
 | Ejercicios Prácticos de Alumnos | Soporte | Ejercicio_[Tema]_[NombreEjercicio].[ext] | 05-Ejercicios/Parcial[Numero]/[Apellido] |
 | Resúmenes para Parcial | Soporte | Resumen_[Apellido].[ext] | 06-Estudio/Parcial[Numero]/Resumenes/ |
-| Notas y Apuntes de Clase | Soporte | Notas_[DDMM]_[Tema]_[Apellido].[ext] | 06-Estudio/Parcial[Numero]/NotasClase/ |
+| Notas y Apuntes de Clase | Soporte | Notas_[DD/MM]_[Tema]_[Apellido].[ext] | 06-Estudio/Parcial[Numero]/NotasClase/ |
 
 
 ## Glosario
@@ -78,7 +78,7 @@ ISW-G8-2026/
 - G8 -> Grupo 8
 - TP -> Trabajo Práctico
 - TIG -> Trabajo de Investigación Grupal
-- DDMM -> Fecha en formato Dia/Mes
+- DD/MM -> Fecha en formato Dia/Mes
 - ext -> Extensión o formato del ítem de configuración
 - [Apellido] -> Apellido del alumno autor del archivo
 - IC -> Ítem de Configuración
