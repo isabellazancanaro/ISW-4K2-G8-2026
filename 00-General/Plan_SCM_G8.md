@@ -57,7 +57,7 @@ ISW-G8-2026/
 
 | Ítem de Configuración | Tipo IC | Regla de Nombrado | Ubicación en el Repositorio |
 | :--- | :--- | :--- | :--- |
-| Plan SCM | Proyecto | Plan_SCM_G8.md | 00-General/ |
+| Plan SCM  | Proyecto | Plan_SCM_G8.md | 00-General/ |
 | Programa Asignatura | Proyecto | Programa_Asignatura.pdf | 00-General/ |
 | Pautas de Email | Proyecto | Pautas_Email.pdf | 00-General/ |
 | Bibliografía | Referencia | [Nombre].pdf | 01-Bibliografía/[Tema]/ |
@@ -70,7 +70,7 @@ ISW-G8-2026/
 | Soluciones de Cátedra | Referencia | Solucion_[Tema].[ext] | 05-Ejercicios/TemplatesYSoluciones/ |
 | Ejercicios Prácticos de Alumnos | Soporte | Ejercicio_[Tema]_[NombreEjercicio].[ext] | 05-Ejercicios/Parcial[Numero]/[Apellido] |
 | Resúmenes para Parcial | Soporte | Resumen_[Apellido].[ext] | 06-Estudio/Parcial[Numero]/Resumenes/ |
-| Notas y Apuntes de Clase | Soporte | Notas_[DD/MM]_[Tema]_[Apellido].[ext] | 06-Estudio/Parcial[Numero]/NotasClase/ |
+| Notas y Apuntes de Clase | Soporte | Notas_[DD-MM]_[Tema]_[Apellido].[ext] | 06-Estudio/Parcial[Numero]/NotasClase/ |
 
 
 ## Glosario
@@ -78,7 +78,7 @@ ISW-G8-2026/
 - G8 -> Grupo 8
 - TP -> Trabajo Práctico
 - TIG -> Trabajo de Investigación Grupal
-- DD/MM -> Fecha en formato Dia/Mes
+- DD-MM -> Fecha en formato Dia/Mes
 - ext -> Extensión o formato del ítem de configuración
 - [Apellido] -> Apellido del alumno autor del archivo
 - IC -> Ítem de Configuración
@@ -86,10 +86,12 @@ ISW-G8-2026/
 ## Criterio de línea base
 Como grupo definimos establecer una línea base al momento de la entrega de un Trabajo Práctico Evaluable o un Trabajo de Investigación Grupal. 
 
-Un item de configuración sera considerado parte de la linea base cuando:
-- Haya pasado por la revisión de 2 miembros del grupo.
+Un item de configuración será considerado parte de la línea base cuando:
+- Ha pasado por la revisión de 2 miembros del grupo.
 - Esté completo y en su versión definitiva.   
-- Se ajuste al formato y la ubicación establecidos en el listado de ítems de configuración.
+- Se ajusta al formato y la ubicación establecidos en el listado de ítems de configuración.
 
-Para la creación de la linea base se usaran etiquetas de la herramienta de versionado Git, las cuales se nombrarán con el formato "tp[N]-entrega" o "tig[N]-entrega", en función de lo entregado.
-En caso de necesitar hacer una corrección sobre una entrega, se creará otra linea base, agregando al nombre la version "tp[N]-entrega-v[N]".
+Para la creación de la línea base se usarán etiquetas de la herramienta de versionado Git, las cuales se nombran con el formato "tp[N]-entrega" o 
+"tig[N]-entrega", en función de lo entregado.
+
+En caso de necesitar hacer una corrección sobre una entrega, se creará otra línea base, agregando al nombre la versión "tp[N]-entrega-v[N]".
