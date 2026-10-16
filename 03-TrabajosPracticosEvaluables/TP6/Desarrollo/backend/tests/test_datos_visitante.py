@@ -4,9 +4,6 @@ from ecoharmony.datos_visitante import (
 )
 from ecoharmony.models.visitante import Visitante
 
-#from ecoharmony.datos_visitante import identificacion_visitante_valida
-from ecoharmony.models.visitante import Visitante
-
 
 def test_dat_01_dni_informado_correctamente():
     visitante = Visitante(
@@ -62,3 +59,14 @@ def test_dat_05_rechaza_grupo_con_persona_incompleta():
     resultado = identificaciones_grupo_validas(visitantes)
 
     assert resultado is False
+
+def test_dat_06_acepta_dni_de_siete_digitos():
+    visitante = Visitante(
+        nombre="Ana Pérez",
+        dni="1234567",
+        edad=25,
+    )
+
+    resultado = identificacion_visitante_valida(visitante)
+
+    assert resultado is True
