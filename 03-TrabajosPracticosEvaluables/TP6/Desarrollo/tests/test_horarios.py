@@ -9,3 +9,11 @@ def test_hor_01_primer_turno_permitido():
     resultado = es_horario_valido(hora)
 
     assert resultado is True
+    
+
+def test_hor_02_ultimo_turno_permitido():
+    hora = time(17, 0)
+
+    resultado = es_horario_valido(hora)
+
+    assert resultado is True
