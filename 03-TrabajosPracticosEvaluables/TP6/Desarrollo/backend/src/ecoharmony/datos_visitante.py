@@ -7,3 +7,9 @@ def identificacion_visitante_valida(visitante: Visitante) -> bool:
         and visitante.dni is not None
         and visitante.dni.isdigit()
     )
+
+def identificaciones_grupo_validas(visitantes: list[Visitante]) -> bool:
+    return all(
+        identificacion_visitante_valida(visitante)
+        for visitante in visitantes
+    )
