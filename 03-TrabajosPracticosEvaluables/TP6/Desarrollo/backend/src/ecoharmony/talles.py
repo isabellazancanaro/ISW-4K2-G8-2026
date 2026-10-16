@@ -1,12 +1,19 @@
+from ecoharmony.actividades import ACTIVIDADES
+
 
 TALLES_VALIDOS = {"XS", "S", "M", "L", "XL", "XXL"}
 
 
 def es_talle_valido_para_actividad(
     actividad: str,
-    talle: str | None
+    talle: str | None,
 ) -> bool:
-    return (
-        (actividad in ("Tirolesa", "Palestra") and talle in TALLES_VALIDOS)
-        or (actividad in ("Safari", "Jardinería") and talle is None)
-    )
+    actividad_objeto = ACTIVIDADES.get(actividad)
+
+    if actividad_objeto is None:
+        return False
+
+    if actividad_objeto.requiere_talle:
+        return talle in TALLES_VALIDOS
+
+    return talle is None
