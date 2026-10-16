@@ -10,3 +10,8 @@ def test_can_02_rechaza_cantidad_negativa():
     resultado = cantidad_valida(-1)
 
     assert resultado is False
+
+def test_can_03_rechaza_cantidad_decimal():
+    resultado = cantidad_valida(1.5)
+
+    assert resultado is False
