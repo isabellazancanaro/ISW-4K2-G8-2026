@@ -12,3 +12,9 @@ def test_tal_02_palestra_acepta_talle_xl():
     resultado = es_talle_valido_para_actividad("Palestra", "XL")
 
     assert resultado is True
+
+
+def test_tal_03_tirolesa_rechaza_talle_inexistente():
+    resultado = es_talle_valido_para_actividad("Tirolesa", "XXXL")
+
+    assert resultado is False
