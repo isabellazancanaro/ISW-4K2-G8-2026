@@ -51,3 +51,10 @@ def test_tal_08_tirolesa_acepta_talles_extremos(talle):
     resultado = es_talle_valido_para_actividad("Tirolesa", talle)
 
     assert resultado is True
+
+
+@pytest.mark.parametrize("actividad", ["Safari", "Jardinería"])
+def test_tal_09_rechaza_talle_adicional(actividad):
+    resultado = es_talle_valido_para_actividad(actividad, "M")
+
+    assert resultado is False
