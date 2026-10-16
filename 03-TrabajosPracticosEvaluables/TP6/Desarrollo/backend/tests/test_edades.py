@@ -18,3 +18,9 @@ def test_ed_03_tirolesa_rechaza_menor_de_8():
 
     assert resultado is False
 
+
+def test_ed_04_tirolesa_acepta_edad_minima():
+    resultado = es_edad_valida_para_actividad("Tirolesa", 8)
+
+    assert resultado is True
+
