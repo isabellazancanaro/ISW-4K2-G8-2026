@@ -54,3 +54,10 @@ def test_ed_07_jardineria_acepta_visitante_de_90_anos():
 
     assert resultado is True
 
+
+def test_ed_08_rechaza_edad_omitida():
+    resultado = es_edad_valida_para_actividad("Safari", None)
+
+    assert resultado is False
+
+
