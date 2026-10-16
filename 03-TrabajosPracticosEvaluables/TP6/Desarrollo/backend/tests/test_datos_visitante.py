@@ -1,4 +1,10 @@
-from ecoharmony.datos_visitante import identificacion_visitante_valida
+from ecoharmony.datos_visitante import (
+    identificacion_visitante_valida,
+    identificaciones_grupo_validas,
+)
+from ecoharmony.models.visitante import Visitante
+
+#from ecoharmony.datos_visitante import identificacion_visitante_valida
 from ecoharmony.models.visitante import Visitante
 
 
@@ -43,5 +49,16 @@ def test_dat_04_rechaza_dni_con_letras():
     )
 
     resultado = identificacion_visitante_valida(visitante)
+
+    assert resultado is False
+
+def test_dat_05_rechaza_grupo_con_persona_incompleta():
+    visitantes = [
+        Visitante(nombre="Ana Pérez", dni="30123456", edad=25),
+        Visitante(nombre="Luis López", dni="1234567", edad=30),
+        Visitante(nombre="María Díaz", dni=None, edad=20),
+    ]
+
+    resultado = identificaciones_grupo_validas(visitantes)
 
     assert resultado is False
