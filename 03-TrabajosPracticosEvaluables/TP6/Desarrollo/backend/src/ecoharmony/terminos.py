@@ -4,4 +4,8 @@ def es_aceptacion_terminos_valida(
     actividad_terminos: str | None,
     acepto: bool | None
 ) -> bool:
-    return False
+    return (
+        actividad == "Tirolesa"
+        and actividad_terminos == "Tirolesa"
+        and acepto is True
+    )
