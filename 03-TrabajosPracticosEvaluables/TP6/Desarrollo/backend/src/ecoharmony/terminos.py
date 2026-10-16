@@ -1,19 +1,13 @@
-
-ACTIVIDADES_VALIDAS = {
-    "Tirolesa",
-    "Safari",
-    "Palestra",
-    "Jardinería",
-}
+from ecoharmony.actividades import es_actividad_valida
 
 
 def es_aceptacion_terminos_valida(
     actividad: str,
     actividad_terminos: str | None,
-    acepto: bool | None
+    acepto: bool | None,
 ) -> bool:
     return (
-        actividad in ACTIVIDADES_VALIDAS
+        es_actividad_valida(actividad)
         and actividad_terminos == actividad
         and acepto is True
     )
