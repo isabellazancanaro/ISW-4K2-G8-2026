@@ -44,3 +44,13 @@ def test_tyc_04_rechaza_aceptacion_omitida():
     )
 
     assert resultado is False
+
+
+def test_tyc_05_rechaza_terminos_de_otra_actividad():
+    resultado = es_aceptacion_terminos_valida(
+        "Tirolesa",
+        "Safari",
+        True
+    )
+
+    assert resultado is False
