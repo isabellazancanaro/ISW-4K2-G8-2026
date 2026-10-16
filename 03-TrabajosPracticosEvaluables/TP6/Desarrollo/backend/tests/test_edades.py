@@ -67,3 +67,9 @@ def test_ed_09_rechaza_edad_negativa():
     assert resultado is False
 
 
+def test_ed_10_rechaza_edad_decimal():
+    resultado = es_edad_valida_para_actividad("Tirolesa", 10.5)
+
+    assert resultado is False
+
+
