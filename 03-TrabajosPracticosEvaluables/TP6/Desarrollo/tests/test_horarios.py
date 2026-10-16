@@ -25,3 +25,11 @@ def test_hor_03_antes_primer_turno():
     resultado = es_horario_valido(hora)
 
     assert resultado is False
+    
+    
+def test_hor_04_despues_ultimo_turno():
+    hora = time(18, 0)
+
+    resultado = es_horario_valido(hora)
+
+    assert resultado is False
