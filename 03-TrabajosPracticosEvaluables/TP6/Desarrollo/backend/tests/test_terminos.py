@@ -1,4 +1,4 @@
-
+import pytest
 from ecoharmony.terminos import es_aceptacion_terminos_valida
 
 
@@ -20,3 +20,17 @@ def test_tyc_02_rechaza_terminos_no_aceptados():
     )
 
     assert resultado is False
+
+
+@pytest.mark.parametrize(
+    "actividad",
+    ["Safari", "Palestra", "Jardinería"]
+)
+def test_tyc_03_aceptar_terminos_propios(actividad):
+    resultado = es_aceptacion_terminos_valida(
+        actividad,
+        actividad,
+        True
+    )
+
+    assert resultado is True
