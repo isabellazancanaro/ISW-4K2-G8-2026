@@ -12,3 +12,14 @@ def test_dat_01_dni_informado_correctamente():
     resultado = identificacion_visitante_valida(visitante)
 
     assert resultado is True
+
+def test_dat_02_rechaza_dni_omitido():
+    visitante = Visitante(
+        nombre="Ana Pérez",
+        dni=None,
+        edad=25,
+    )
+
+    resultado = identificacion_visitante_valida(visitante)
+
+    assert resultado is False
