@@ -34,3 +34,14 @@ def test_dat_03_rechaza_nombre_omitido():
     resultado = identificacion_visitante_valida(visitante)
 
     assert resultado is False
+
+def test_dat_04_rechaza_dni_con_letras():
+    visitante = Visitante(
+        nombre="Ana Pérez",
+        dni="ABC12345",
+        edad=25,
+    )
+
+    resultado = identificacion_visitante_valida(visitante)
+
+    assert resultado is False
