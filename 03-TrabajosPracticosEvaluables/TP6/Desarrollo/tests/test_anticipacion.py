@@ -22,3 +22,9 @@ def test_ant_03_reserva_25_horas_antes_rechazada():
     ahora = datetime.fromisoformat("2026-10-19T08:00:00-03:00")
 
     assert esta_en_ventana_de_reserva(inicio, ahora) is False
+
+def test_ant_04_reserva_14_minutos_antes_rechazada():
+    inicio = datetime.fromisoformat("2026-10-20T09:00:00-03:00")
+    ahora = datetime.fromisoformat("2026-10-20T08:46:00-03:00")
+
+    assert esta_en_ventana_de_reserva(inicio, ahora) is False
