@@ -34,3 +34,13 @@ def test_tyc_03_aceptar_terminos_propios(actividad):
     )
 
     assert resultado is True
+
+
+def test_tyc_04_rechaza_aceptacion_omitida():
+    resultado = es_aceptacion_terminos_valida(
+        "Tirolesa",
+        "Tirolesa",
+        None
+    )
+
+    assert resultado is False
