@@ -31,3 +31,9 @@ def test_ed_05_safari_acepta_visitante_de_un_ano():
     assert resultado is True
 
 
+def test_ed_06_jardineria_acepta_visitante_de_un_ano():
+    resultado = es_edad_valida_para_actividad("Jardinería", 1)
+
+    assert resultado is True
+
+
