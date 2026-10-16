@@ -1,3 +1,4 @@
+import pytest
 
 from ecoharmony.talles import es_talle_valido_para_actividad
 
@@ -41,5 +42,12 @@ def test_tal_06_safari_acepta_talle_omitido():
 
 def test_tal_07_jardineria_acepta_talle_omitido():
     resultado = es_talle_valido_para_actividad("Jardinería", None)
+
+    assert resultado is True
+
+
+@pytest.mark.parametrize("talle", ["XS", "XXL"])
+def test_tal_08_tirolesa_acepta_talles_extremos(talle):
+    resultado = es_talle_valido_para_actividad("Tirolesa", talle)
 
     assert resultado is True
