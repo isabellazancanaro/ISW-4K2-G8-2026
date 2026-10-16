@@ -18,3 +18,10 @@ def test_tal_03_tirolesa_rechaza_talle_inexistente():
     resultado = es_talle_valido_para_actividad("Tirolesa", "XXXL")
 
     assert resultado is False
+
+
+
+def test_tal_04_tirolesa_rechaza_talle_omitido():
+    resultado = es_talle_valido_para_actividad("Tirolesa", None)
+
+    assert resultado is False
