@@ -17,7 +17,7 @@ def test_fec_02_parque_cerrado_lunes():
     resultado = es_fecha_habilitada(fecha)
 
     assert resultado is False
-    
+
 
 def test_fec_03_cierre_25_diciembre():
     fecha = date(2026, 12, 25)
@@ -25,7 +25,7 @@ def test_fec_03_cierre_25_diciembre():
     resultado = es_fecha_habilitada(fecha)
 
     assert resultado is False
-    
+
 
 def test_fec_04_cierre_1_enero():
     fecha = date(2027, 1, 1)
