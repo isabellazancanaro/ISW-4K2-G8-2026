@@ -42,3 +42,15 @@ def test_ed_11_safari_acepta_edad_cero():
 
     assert resultado is True
 
+
+def test_ed_07_safari_acepta_visitante_de_90_anos():
+    resultado = es_edad_valida_para_actividad("Safari", 90)
+
+    assert resultado is True
+
+
+def test_ed_07_jardineria_acepta_visitante_de_90_anos():
+    resultado = es_edad_valida_para_actividad("Jardinería", 90)
+
+    assert resultado is True
+
