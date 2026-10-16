@@ -61,3 +61,9 @@ def test_ed_08_rechaza_edad_omitida():
     assert resultado is False
 
 
+def test_ed_09_rechaza_edad_negativa():
+    resultado = es_edad_valida_para_actividad("Safari", -1)
+
+    assert resultado is False
+
+
