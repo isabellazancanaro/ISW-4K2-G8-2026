@@ -25,3 +25,9 @@ def test_tal_04_tirolesa_rechaza_talle_omitido():
     resultado = es_talle_valido_para_actividad("Tirolesa", None)
 
     assert resultado is False
+
+
+def test_tal_05_palestra_rechaza_talle_omitido():
+    resultado = es_talle_valido_para_actividad("Palestra", None)
+
+    assert resultado is False
