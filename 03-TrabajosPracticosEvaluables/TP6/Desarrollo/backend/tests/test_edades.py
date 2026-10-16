@@ -24,3 +24,10 @@ def test_ed_04_tirolesa_acepta_edad_minima():
 
     assert resultado is True
 
+
+def test_ed_05_safari_acepta_visitante_de_un_ano():
+    resultado = es_edad_valida_para_actividad("Safari", 1)
+
+    assert resultado is True
+
+
