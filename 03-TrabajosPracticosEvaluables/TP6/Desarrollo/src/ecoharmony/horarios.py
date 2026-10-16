@@ -2,4 +2,4 @@ from datetime import time
 
 
 def es_horario_valido(hora: time | None) -> bool:
-    return True
+    return hora.hour >= 9
