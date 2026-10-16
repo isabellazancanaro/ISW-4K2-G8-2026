@@ -37,3 +37,9 @@ def test_tal_06_safari_acepta_talle_omitido():
     resultado = es_talle_valido_para_actividad("Safari", None)
 
     assert resultado is True
+
+
+def test_tal_07_jardineria_acepta_talle_omitido():
+    resultado = es_talle_valido_para_actividad("Jardinería", None)
+
+    assert resultado is True
