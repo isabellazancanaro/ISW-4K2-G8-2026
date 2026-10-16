@@ -81,3 +81,14 @@ def test_dat_07_rechaza_dni_de_seis_digitos():
     resultado = identificacion_visitante_valida(visitante)
 
     assert resultado is False
+
+def test_dat_08_rechaza_dni_de_nueve_digitos():
+    visitante = Visitante(
+        nombre="Ana Pérez",
+        dni="123456789",
+        edad=25,
+    )
+
+    resultado = identificacion_visitante_valida(visitante)
+
+    assert resultado is False
