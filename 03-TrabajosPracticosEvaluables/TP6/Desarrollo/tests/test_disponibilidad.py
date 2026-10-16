@@ -40,3 +40,28 @@ def test_disp_03_actividad_completa():
 
     assert disponibles == 0
     assert ocupacion[("Tirolesa", inicio)] == 10
+
+
+def test_disp_04_disponibilidad_independiente_por_turno():
+    zona_horaria = timezone(timedelta(hours=-3))
+
+    turno_09 = datetime(2026, 10, 20, 9, 0, tzinfo=zona_horaria)
+    turno_10 = datetime(2026, 10, 20, 10, 0, tzinfo=zona_horaria)
+
+    ocupacion = {
+        ("Tirolesa", turno_09): 10,
+        ("Tirolesa", turno_10): 9,
+    }
+
+    ocupacion_original = ocupacion.copy()
+
+    disponibles_09 = consultar_disponibilidad(
+        "Tirolesa", turno_09, ocupacion
+    )
+    disponibles_10 = consultar_disponibilidad(
+        "Tirolesa", turno_10, ocupacion
+    )
+
+    assert disponibles_09 == 0
+    assert disponibles_10 == 1
+    assert ocupacion == ocupacion_original
