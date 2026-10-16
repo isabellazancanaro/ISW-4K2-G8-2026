@@ -10,3 +10,13 @@ def test_tyc_01_aceptar_terminos_correctos_tirolesa():
     )
 
     assert resultado is True
+
+
+def test_tyc_02_rechaza_terminos_no_aceptados():
+    resultado = es_aceptacion_terminos_valida(
+        "Tirolesa",
+        "Tirolesa",
+        False
+    )
+
+    assert resultado is False
