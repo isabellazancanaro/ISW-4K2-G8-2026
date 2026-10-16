@@ -70,3 +70,14 @@ def test_dat_06_acepta_dni_de_siete_digitos():
     resultado = identificacion_visitante_valida(visitante)
 
     assert resultado is True
+
+def test_dat_07_rechaza_dni_de_seis_digitos():
+    visitante = Visitante(
+        nombre="Ana Pérez",
+        dni="123456",
+        edad=25,
+    )
+
+    resultado = identificacion_visitante_valida(visitante)
+
+    assert resultado is False
