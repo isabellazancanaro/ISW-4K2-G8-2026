@@ -17,3 +17,11 @@ def test_hor_02_ultimo_turno_permitido():
     resultado = es_horario_valido(hora)
 
     assert resultado is True
+    
+    
+def test_hor_03_antes_primer_turno():
+    hora = time(8, 0)
+
+    resultado = es_horario_valido(hora)
+
+    assert resultado is False
