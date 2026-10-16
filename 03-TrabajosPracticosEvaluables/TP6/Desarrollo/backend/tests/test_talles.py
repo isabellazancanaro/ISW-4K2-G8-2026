@@ -31,3 +31,9 @@ def test_tal_05_palestra_rechaza_talle_omitido():
     resultado = es_talle_valido_para_actividad("Palestra", None)
 
     assert resultado is False
+
+
+def test_tal_06_safari_acepta_talle_omitido():
+    resultado = es_talle_valido_para_actividad("Safari", None)
+
+    assert resultado is True
