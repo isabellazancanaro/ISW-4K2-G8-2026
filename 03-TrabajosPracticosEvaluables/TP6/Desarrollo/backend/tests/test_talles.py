@@ -6,3 +6,9 @@ def test_tal_01_tirolesa_acepta_talle_xl():
     resultado = es_talle_valido_para_actividad("Tirolesa", "XL")
 
     assert resultado is True
+
+
+def test_tal_02_palestra_acepta_talle_xl():
+    resultado = es_talle_valido_para_actividad("Palestra", "XL")
+
+    assert resultado is True
