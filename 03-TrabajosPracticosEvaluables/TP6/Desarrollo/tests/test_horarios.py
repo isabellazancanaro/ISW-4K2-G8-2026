@@ -33,3 +33,11 @@ def test_hor_04_despues_ultimo_turno():
     resultado = es_horario_valido(hora)
 
     assert resultado is False
+    
+    
+def test_hor_05_horario_no_alineado():
+    hora = time(9, 30)
+
+    resultado = es_horario_valido(hora)
+
+    assert resultado is False
