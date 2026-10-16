@@ -92,3 +92,14 @@ def test_dat_08_rechaza_dni_de_nueve_digitos():
     resultado = identificacion_visitante_valida(visitante)
 
     assert resultado is False
+
+
+def test_regresion_acepta_grupo_con_identificaciones_validas():
+    visitantes = [
+        Visitante(nombre="Ana Pérez", dni="30123456", edad=25),
+        Visitante(nombre="Luis López", dni="1234567", edad=30),
+    ]
+
+    resultado = identificaciones_grupo_validas(visitantes)
+
+    assert resultado is True

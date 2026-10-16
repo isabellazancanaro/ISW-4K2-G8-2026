@@ -1,11 +1,13 @@
+from ecoharmony.actividades import ACTIVIDADES
+
+
 def es_edad_valida_para_actividad(actividad: str, edad: int | None) -> bool:
     if type(edad) is not int or edad < 0:
         return False
 
-    if actividad == "Palestra":
-        return edad >= 12
+    actividad_objeto = ACTIVIDADES.get(actividad)
 
-    if actividad == "Tirolesa":
-        return edad >= 8
+    if actividad_objeto is None:
+        return True
 
-    return True
+    return actividad_objeto.admite_edad(edad)
