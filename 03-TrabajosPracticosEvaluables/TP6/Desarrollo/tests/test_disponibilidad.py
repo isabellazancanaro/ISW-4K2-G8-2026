@@ -25,3 +25,18 @@ def test_disp_02_disponibilidad_con_un_cupo_restante():
 
     assert disponibles == 1
     assert ocupacion[("Tirolesa", inicio)] == 9
+
+def test_disp_03_actividad_completa():
+    zona_horaria = timezone(timedelta(hours=-3))
+    inicio = datetime(2026, 10, 20, 9, 0, tzinfo=zona_horaria)
+
+    ocupacion = {
+        ("Tirolesa", inicio): 10
+    }
+
+    disponibles = consultar_disponibilidad(
+        "Tirolesa", inicio, ocupacion
+    )
+
+    assert disponibles == 0
+    assert ocupacion[("Tirolesa", inicio)] == 10
