@@ -6,6 +6,7 @@ def identificacion_visitante_valida(visitante: Visitante) -> bool:
         bool(visitante.nombre and visitante.nombre.strip())
         and visitante.dni is not None
         and visitante.dni.isdigit()
+        and len(visitante.dni) >= 7
     )
 
 def identificaciones_grupo_validas(visitantes: list[Visitante]) -> bool:
