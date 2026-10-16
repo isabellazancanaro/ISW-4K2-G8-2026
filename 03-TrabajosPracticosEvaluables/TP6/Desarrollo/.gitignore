@@ -1,0 +1,15 @@
+# Entorno virtual
+.venv/
+
+# Archivos generados por Python
+__pycache__/
+*.py[cod]
+
+# Caché de pytest
+.pytest_cache/
+
+# Cobertura de pruebas
+.coverage
+htmlcov/
+
+*.egg-info/
