@@ -1,0 +1,60 @@
+import pytest
+
+from ecoharmony.talles import es_talle_valido_para_actividad
+
+
+def test_tal_01_tirolesa_acepta_talle_xl():
+    resultado = es_talle_valido_para_actividad("Tirolesa", "XL")
+
+    assert resultado is True
+
+
+def test_tal_02_palestra_acepta_talle_xl():
+    resultado = es_talle_valido_para_actividad("Palestra", "XL")
+
+    assert resultado is True
+
+
+def test_tal_03_tirolesa_rechaza_talle_inexistente():
+    resultado = es_talle_valido_para_actividad("Tirolesa", "XXXL")
+
+    assert resultado is False
+
+
+
+def test_tal_04_tirolesa_rechaza_talle_omitido():
+    resultado = es_talle_valido_para_actividad("Tirolesa", None)
+
+    assert resultado is False
+
+
+def test_tal_05_palestra_rechaza_talle_omitido():
+    resultado = es_talle_valido_para_actividad("Palestra", None)
+
+    assert resultado is False
+
+
+def test_tal_06_safari_acepta_talle_omitido():
+    resultado = es_talle_valido_para_actividad("Safari", None)
+
+    assert resultado is True
+
+
+def test_tal_07_jardineria_acepta_talle_omitido():
+    resultado = es_talle_valido_para_actividad("Jardinería", None)
+
+    assert resultado is True
+
+
+@pytest.mark.parametrize("talle", ["XS", "XXL"])
+def test_tal_08_tirolesa_acepta_talles_extremos(talle):
+    resultado = es_talle_valido_para_actividad("Tirolesa", talle)
+
+    assert resultado is True
+
+
+@pytest.mark.parametrize("actividad", ["Safari", "Jardinería"])
+def test_tal_09_rechaza_talle_adicional(actividad):
+    resultado = es_talle_valido_para_actividad(actividad, "M")
+
+    assert resultado is False
