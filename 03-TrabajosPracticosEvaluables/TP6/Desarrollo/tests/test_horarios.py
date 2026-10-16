@@ -41,3 +41,11 @@ def test_hor_05_horario_no_alineado():
     resultado = es_horario_valido(hora)
 
     assert resultado is False
+    
+    
+def test_hor_06_horario_omitido():
+    hora = None
+
+    resultado = es_horario_valido(hora)
+
+    assert resultado is False
