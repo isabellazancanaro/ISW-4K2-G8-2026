@@ -24,9 +24,10 @@ class Inscripcion:
 
 class ServicioInscripciones:
 
-    def __init__(self):
+    def __init__(self, servicio_confirmaciones=None):
         self._inscripciones: list[Inscripcion] = []
         self.ocupacion: dict[tuple[str, datetime], int] = {}
+        self._servicio_confirmaciones = servicio_confirmaciones
 
     @property
     def inscripciones(self) -> tuple[Inscripcion, ...]:
@@ -104,6 +105,7 @@ class ServicioInscripciones:
         visitantes: list[Visitante],
         actividad_terminos: str,
         acepto_terminos: bool,
+        email_titular: str | None = None,
     ) -> Inscripcion | None:
         
         if not self._solicitud_valida(
@@ -140,5 +142,11 @@ class ServicioInscripciones:
         self.ocupacion[clave] = (
             self.ocupacion.get(clave, 0) + cantidad
         )
+        
+        if self._servicio_confirmaciones is not None and email_titular is not None:
+            self._servicio_confirmaciones.confirmar(
+                inscripcion,
+                email_titular,
+            )
 
         return inscripcion
