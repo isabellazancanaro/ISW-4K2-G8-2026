@@ -348,3 +348,37 @@ def test_est_03_datos_invalidos_no_modifican_estado():
     assert len(servicio.inscripciones) == 0
     assert servicio.consultar_cupos("Tirolesa", inicio) == 10
     assert servicio.ocupacion.get(("Tirolesa", inicio), 0) == 0
+
+def test_est_04_terminos_no_aceptados_no_modifican_estado():
+    """EST-04: rechazar sin modificar estado si no acepta términos."""
+
+    zona = timezone(timedelta(hours=-3))
+    inicio = datetime(2026, 10, 20, 10, 0, tzinfo=zona)
+    ahora = datetime(2026, 10, 19, 12, 0, tzinfo=zona)
+
+    visitante = Visitante(
+        nombre="Ana García",
+        dni="12345678",
+        edad=20,
+        talle="M",
+    )
+
+    servicio = ServicioInscripciones()
+
+    inscripciones_anteriores = servicio.inscripciones
+    ocupacion_anterior = dict(servicio.ocupacion)
+
+    resultado = servicio.inscribir(
+        actividad="Tirolesa",
+        inicio=inicio,
+        ahora=ahora,
+        cantidad=1,
+        visitantes=[visitante],
+        actividad_terminos="Tirolesa",
+        acepto_terminos=False,
+    )
+
+    assert resultado is None
+    assert servicio.inscripciones == inscripciones_anteriores
+    assert servicio.ocupacion == ocupacion_anterior
+    assert servicio.consultar_cupos("Tirolesa", inicio) == 10
