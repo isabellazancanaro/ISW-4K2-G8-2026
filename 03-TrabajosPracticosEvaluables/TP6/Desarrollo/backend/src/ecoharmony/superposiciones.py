@@ -1,6 +1,11 @@
+from __future__ import annotations
 from datetime import datetime, timedelta
 
-from ecoharmony.inscripciones import Inscripcion
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ecoharmony.inscripciones import Inscripcion
+
 from ecoharmony.models.visitante import Visitante
 
 DURACION_ACTIVIDAD = timedelta(hours=1)

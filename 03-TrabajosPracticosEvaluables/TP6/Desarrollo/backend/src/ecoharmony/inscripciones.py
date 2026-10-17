@@ -13,6 +13,7 @@ from ecoharmony.horarios import es_horario_valido
 from ecoharmony.models.visitante import Visitante
 from ecoharmony.talles import es_talle_valido_para_actividad
 from ecoharmony.terminos import es_aceptacion_terminos_valida
+from ecoharmony.superposiciones import tiene_superposicion_grupo
 
 @dataclass(frozen=True)
 class Inscripcion:
@@ -117,6 +118,13 @@ class ServicioInscripciones:
             return None
 
         if self.consultar_cupos(actividad, inicio) < cantidad:
+            return None
+
+        if tiene_superposicion_grupo(
+            visitantes,
+            inicio,
+            self._inscripciones,
+        ):
             return None
         
         inscripcion = Inscripcion(
