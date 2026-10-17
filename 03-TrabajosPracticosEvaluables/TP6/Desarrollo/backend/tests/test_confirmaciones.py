@@ -73,3 +73,22 @@ def test_mail_03_grupo_de_tres_recibe_tres_participantes_con_qr_legibles():
         leidos = zxingcpp.read_barcodes(Image.open(io.BytesIO(participante.imagen_qr)))
         assert [codigo.text for codigo in leidos] == [participante.codigo_qr]
         assert participante.visitante.dni in participante.codigo_qr
+
+
+
+def test_mail_05_grupo_de_tres_genera_un_solo_correo_al_titular():
+    """MAIL-05: se envía un único correo al titular, no uno por participante."""
+    visitantes = [
+        Visitante(nombre="Ana García", dni="11111111", edad=20, talle="M"),
+        Visitante(nombre="Bruno Díaz", dni="22222222", edad=25, talle="L"),
+        Visitante(nombre="Carla Ruiz", dni="33333333", edad=30, talle="S"),
+    ]
+    inscripcion = Inscripcion(actividad="Tirolesa", inicio=MARTES_10, visitantes=visitantes)
+    notificador = NotificadorSimulado()
+    servicio = ServicioConfirmaciones(notificador)
+
+    servicio.confirmar(inscripcion, EMAIL_TITULAR)
+
+    assert len(notificador.enviados) == 1
+    assert notificador.enviados[0].destinatario == EMAIL_TITULAR
+    assert len(notificador.enviados[0].participantes) == 3
