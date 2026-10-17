@@ -1,4 +1,4 @@
-
+import pytest
 from datetime import datetime, timedelta, timezone
 
 from ecoharmony.models.visitante import Visitante
@@ -241,3 +241,38 @@ def test_cup_06_safari_ocupa_sus_ocho_cupos():
     assert len(resultado.visitantes) == 8
     assert servicio.ocupacion[("Safari", inicio)] == 8
     assert servicio.consultar_cupos("Safari", inicio) == 0
+
+@pytest.mark.parametrize("actividad", ["Palestra", "Jardinería"])
+def test_cup_07_capacidad_de_doce_personas(actividad):
+    """CUP-07: Palestra y Jardinería tienen 12 cupos."""
+
+    zona = timezone(timedelta(hours=-3))
+    inicio = datetime(2026, 10, 20, 10, 0, tzinfo=zona)
+    ahora = datetime(2026, 10, 19, 12, 0, tzinfo=zona)
+
+    visitantes = [
+        Visitante(
+            nombre=f"Visitante {i}",
+            dni=str(10000000 + i),
+            edad=20,
+            talle="M" if actividad == "Palestra" else None,
+        )
+        for i in range(12)
+    ]
+
+    servicio = ServicioInscripciones()
+
+    resultado = servicio.inscribir(
+        actividad=actividad,
+        inicio=inicio,
+        ahora=ahora,
+        cantidad=12,
+        visitantes=visitantes,
+        actividad_terminos=actividad,
+        acepto_terminos=True,
+    )
+
+    assert resultado is not None
+    assert len(resultado.visitantes) == 12
+    assert servicio.ocupacion[(actividad, inicio)] == 12
+    assert servicio.consultar_cupos(actividad, inicio) == 0
