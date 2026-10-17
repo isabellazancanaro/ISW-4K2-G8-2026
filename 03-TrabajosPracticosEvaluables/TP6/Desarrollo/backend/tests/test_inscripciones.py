@@ -170,3 +170,40 @@ def test_cup_04_rechaza_inscripcion_sin_cupos():
     assert servicio.ocupacion == ocupacion_anterior
     assert len(servicio.inscripciones) == inscripciones_anteriores
     assert servicio.consultar_cupos("Tirolesa", inicio) == 0
+
+def test_cup_05_rechaza_grupo_que_supera_cupos_disponibles():
+    """CUP-05: rechaza todo el grupo si los cupos son insuficientes."""
+
+    zona = timezone(timedelta(hours=-3))
+    inicio = datetime(2026, 10, 20, 10, 0, tzinfo=zona)
+    ahora = datetime(2026, 10, 19, 12, 0, tzinfo=zona)
+
+    visitantes = [
+        Visitante(
+            nombre=f"Visitante {i}",
+            dni=str(10000000 + i),
+            edad=20,
+            talle="M",
+        )
+        for i in range(3)
+    ]
+
+    servicio = ServicioInscripciones()
+
+    # Tirolesa tiene 10 cupos, de los cuales 8 están ocupados.
+    servicio.ocupacion[("Tirolesa", inicio)] = 8
+
+    resultado = servicio.inscribir(
+        actividad="Tirolesa",
+        inicio=inicio,
+        ahora=ahora,
+        cantidad=3,
+        visitantes=visitantes,
+        actividad_terminos="Tirolesa",
+        acepto_terminos=True,
+    )
+
+    assert resultado is None
+    assert len(servicio.inscripciones) == 0
+    assert servicio.ocupacion[("Tirolesa", inicio)] == 8
+    assert servicio.consultar_cupos("Tirolesa", inicio) == 2
