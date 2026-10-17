@@ -2,9 +2,10 @@
 
 from datetime import datetime, timedelta, timezone
 
-from ecoharmony.inscripciones import Inscripcion
-from ecoharmony.models.visitante import Visitante
-from ecoharmony.superposiciones import tiene_superposicion
+from ecoharmony.superposiciones import (
+    tiene_superposicion,
+    tiene_superposicion_grupo,
+)
 
 ZONA_ARGENTINA = timezone(timedelta(hours=-3))
 MARTES_10 = datetime(2026, 10, 20, 10, 0, tzinfo=ZONA_ARGENTINA)
@@ -55,3 +56,23 @@ def test_sup_04_misma_persona_en_horarios_consecutivos_no_tiene_superposicion():
     ]
 
     assert tiene_superposicion("12345678", martes_11, existentes) is False
+
+
+def test_sup_05_grupo_con_un_participante_en_conflicto_tiene_superposicion():
+    """SUP-05: si un integrante del grupo tiene conflicto, el grupo entero lo tiene."""
+    participante_a = Visitante(nombre="Ana García", dni="11111111", edad=20)
+    participante_b = Visitante(nombre="Bruno Díaz", dni="22222222", edad=25)
+    participante_c = Visitante(nombre="Carla Ruiz", dni="33333333", edad=30)
+    existentes = [
+        Inscripcion(
+            actividad="Safari",
+            inicio=MARTES_10,
+            visitantes=[participante_b],
+        )
+    ]
+
+    assert tiene_superposicion_grupo(
+        [participante_a, participante_b, participante_c],
+        MARTES_10,
+        existentes,
+    ) is True
