@@ -135,6 +135,8 @@ button[type="submit"]:hover { background: var(--verde); }
   border-left: 4px solid var(--rojo);
   border-radius: 8px;
 }
+.error-campo { color: var(--rojo); font-weight: 700; margin: 6px 0 12px; }
+input[aria-invalid="true"], select[aria-invalid="true"] { border-color: var(--rojo); }
 
 /* ---------- visitantes (los genera el JS) ---------- */
 #visitantes fieldset {
@@ -155,10 +157,20 @@ button[type="submit"]:hover { background: var(--verde); }
 
 /* ---------- bloque final ---------- */
 #bloque-final {
+  border: 0;
+  padding: 18px 0 0;
+  min-width: 0;
   margin-top: 8px;
   padding-top: 18px;
   border-top: 2px dashed var(--lima);
 }
+#bloque-final:disabled { opacity: .65; }
+.lista-qr { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 16px; }
+.entrada-qr { text-align: center; border: 2px solid var(--lima); border-radius: 12px; padding: 16px; }
+.codigo-qr { display: block; width: min(100%, 280px); height: auto; margin: 0 auto 16px; }
+.correo-simulado { margin: 24px 0; padding: 18px; background: var(--crema); border-radius: 12px; overflow-wrap: anywhere; }
+.correo-simulado dt { font-weight: 700; }
+.correo-simulado dd { margin: 0 0 10px; }
 #terminos-texto {
   margin: 0;
   font-size: .95rem;
