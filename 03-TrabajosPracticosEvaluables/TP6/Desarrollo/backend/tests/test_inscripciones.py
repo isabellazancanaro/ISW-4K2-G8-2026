@@ -3,7 +3,7 @@ from datetime import datetime, timedelta, timezone
 
 from ecoharmony.models.visitante import Visitante
 from ecoharmony.inscripciones import ServicioInscripciones
-
+from ecoharmony.confirmaciones import (ServicioConfirmaciones, NotificadorSimulado)
 
 def test_cup_01_registra_una_persona_con_cupos_disponibles():
     """CUP-01: registra una inscripción válida cuando hay cupos."""
@@ -542,3 +542,38 @@ def test_sup_05_rechaza_grupo_con_participante_superpuesto():
     assert servicio.inscripciones == inscripciones_antes
     assert servicio.ocupacion == ocupacion_antes
     assert servicio.consultar_cupos("Tirolesa", inicio) == 10
+
+def test_mail_01_inscripcion_valida_genera_confirmacion():
+    """MAIL-01 integral: una inscripción válida solicita un correo."""
+
+    zona = timezone(timedelta(hours=-3))
+    inicio = datetime(2026, 10, 20, 10, 0, tzinfo=zona)
+    ahora = datetime(2026, 10, 19, 12, 0, tzinfo=zona)
+
+    notificador = NotificadorSimulado()
+    confirmaciones = ServicioConfirmaciones(notificador)
+
+    servicio = ServicioInscripciones(
+        servicio_confirmaciones=confirmaciones
+    )
+
+    visitante = Visitante(
+        nombre="Ana García",
+        dni="12345678",
+        edad=20,
+        talle="M",
+    )
+
+    resultado = servicio.inscribir(
+        actividad="Tirolesa",
+        inicio=inicio,
+        ahora=ahora,
+        cantidad=1,
+        visitantes=[visitante],
+        actividad_terminos="Tirolesa",
+        acepto_terminos=True,
+        email_titular="titular@example.com",
+    )
+
+    assert resultado is not None
+    assert len(notificador.enviados) == 1
