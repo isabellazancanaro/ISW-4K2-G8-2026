@@ -417,3 +417,74 @@ def test_est_01_conserva_inscripcion_confirmada():
     assert inscripciones_guardadas[0].actividad == "Tirolesa"
     assert inscripciones_guardadas[0].inicio == inicio
     assert inscripciones_guardadas[0].visitantes == [visitante]
+
+def test_est_02_ocupacion_refleja_inscripciones():
+    """EST-02: la ocupación refleja los participantes registrados."""
+
+    zona = timezone(timedelta(hours=-3))
+    inicio = datetime(2026, 10, 20, 10, 0, tzinfo=zona)
+    ahora = datetime(2026, 10, 19, 12, 0, tzinfo=zona)
+
+    servicio = ServicioInscripciones()
+
+    primer_grupo = [
+        Visitante(
+            nombre="Ana García",
+            dni="12345678",
+            edad=20,
+            talle="M",
+        ),
+        Visitante(
+            nombre="Juan Pérez",
+            dni="23456789",
+            edad=25,
+            talle="L",
+        ),
+    ]
+
+    segundo_grupo = [
+        Visitante(
+            nombre="Lucía Gómez",
+            dni="34567890",
+            edad=30,
+            talle="S",
+        )
+    ]
+
+    resultado_1 = servicio.inscribir(
+        actividad="Tirolesa",
+        inicio=inicio,
+        ahora=ahora,
+        cantidad=2,
+        visitantes=primer_grupo,
+        actividad_terminos="Tirolesa",
+        acepto_terminos=True,
+    )
+
+    assert resultado_1 is not None
+    assert servicio.consultar_cupos("Tirolesa", inicio) == 8
+
+    resultado_2 = servicio.inscribir(
+        actividad="Tirolesa",
+        inicio=inicio,
+        ahora=ahora,
+        cantidad=1,
+        visitantes=segundo_grupo,
+        actividad_terminos="Tirolesa",
+        acepto_terminos=True,
+    )
+
+    assert resultado_2 is not None
+    assert len(servicio.inscripciones) == 2
+    assert servicio.ocupacion[("Tirolesa", inicio)] == 3
+    assert servicio.consultar_cupos("Tirolesa", inicio) == 7
+
+    total_participantes = sum(
+        len(inscripcion.visitantes)
+        for inscripcion in servicio.inscripciones
+    )
+
+    assert total_participantes == 3
+    assert total_participantes == servicio.ocupacion[
+        ("Tirolesa", inicio)
+    ]
