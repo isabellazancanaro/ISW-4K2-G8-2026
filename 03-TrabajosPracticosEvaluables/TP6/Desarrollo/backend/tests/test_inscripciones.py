@@ -647,3 +647,37 @@ def test_mail_05_un_correo_al_titular_para_grupo():
     assert servicio.ocupacion[("Tirolesa", inicio)] == 3
 
     assert len(notificador.enviados) == 1
+    
+    correo = notificador.enviados[0]
+
+    # Verificar destinatario y datos generales.
+    assert correo.destinatario == "titular@example.com"
+    assert correo.numero_orden == "ORD-0001"
+    assert correo.actividad == "Tirolesa"
+    assert correo.inicio == inicio
+
+    # Verificar que estén los tres participantes.
+    assert len(correo.participantes) == 3
+
+    for participante_confirmado, visitante in zip(
+        correo.participantes, visitantes
+    ):
+        assert participante_confirmado.visitante == visitante
+
+        # Cada participante tiene su propio código.
+        assert visitante.dni in participante_confirmado.codigo_qr
+        assert correo.numero_orden in participante_confirmado.codigo_qr
+
+        # El QR se generó como imagen PNG.
+        assert participante_confirmado.imagen_qr.startswith(
+            b"\x89PNG\r\n\x1a\n"
+        )
+
+    # Los códigos QR deben ser diferentes entre participantes.
+    codigos = [
+        participante.codigo_qr
+        for participante in correo.participantes
+    ]
+
+    assert len(set(codigos)) == 3
+
