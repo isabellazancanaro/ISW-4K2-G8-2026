@@ -44,6 +44,9 @@ class ServicioInscripciones:
         acepto_terminos: bool,
     ) -> Inscripcion:
 
+        if self.consultar_cupos(actividad, inicio) < cantidad:
+            return None
+        
         inscripcion = Inscripcion(
             actividad=actividad,
             inicio=inicio,
@@ -51,7 +54,7 @@ class ServicioInscripciones:
         )
 
         self._inscripciones.append(inscripcion)
-        
+
         clave = (actividad, inicio)
 
         self.ocupacion[clave] = (
