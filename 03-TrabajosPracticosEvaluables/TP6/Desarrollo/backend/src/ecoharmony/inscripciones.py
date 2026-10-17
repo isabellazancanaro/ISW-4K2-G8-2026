@@ -4,6 +4,18 @@ from datetime import datetime
 from ecoharmony.disponibilidad import consultar_disponibilidad
 from ecoharmony.models.visitante import Visitante
 
+from ecoharmony.actividades import es_actividad_valida
+from ecoharmony.calendario import es_fecha_habilitada
+from ecoharmony.horarios import es_horario_valido
+from ecoharmony.anticipacion import esta_en_ventana_de_reserva
+
+from ecoharmony.datos_visitante import (identificaciones_grupo_validas)
+from ecoharmony.cantidad_participantes import (cantidad_coincide_con_visitantes)
+from ecoharmony.edades import es_edad_valida_para_actividad
+from ecoharmony.talles import es_talle_valido_para_actividad
+from ecoharmony.terminos import es_aceptacion_terminos_valida
+
+
 
 @dataclass(frozen=True)
 class Inscripcion:
@@ -33,6 +45,58 @@ class ServicioInscripciones:
             self.ocupacion,
         )
 
+    
+    def _solicitud_valida(
+        self,
+        actividad: str,
+        inicio: datetime,
+        ahora: datetime,
+        cantidad: int,
+        visitantes: list[Visitante],
+        actividad_terminos: str,
+        acepto_terminos: bool,
+    ) -> bool:
+
+        if not es_actividad_valida(actividad):
+            return False
+
+        if not es_fecha_habilitada(inicio.date()):
+            return False
+
+        if not es_horario_valido(inicio.time()):
+            return False
+
+        if not esta_en_ventana_de_reserva(inicio, ahora):
+            return False
+
+        if not cantidad_coincide_con_visitantes(
+            cantidad, visitantes
+        ):
+            return False
+
+        if not identificaciones_grupo_validas(visitantes):
+            return False
+
+        for visitante in visitantes:
+            if not es_edad_valida_para_actividad(
+                actividad, visitante.edad
+            ):
+                return False
+
+            if not es_talle_valido_para_actividad(
+                actividad, visitante.talle
+            ):
+                return False
+
+        if not es_aceptacion_terminos_valida(
+            actividad,
+            actividad_terminos,
+            acepto_terminos,
+        ):
+            return False
+
+        return True
+
     def inscribir(
         self,
         actividad: str,
@@ -43,6 +107,17 @@ class ServicioInscripciones:
         actividad_terminos: str,
         acepto_terminos: bool,
     ) -> Inscripcion:
+        
+        if not self._solicitud_valida(
+            actividad,
+            inicio,
+            ahora,
+            cantidad,
+            visitantes,
+            actividad_terminos,
+            acepto_terminos,
+        ):
+            return None
 
         if self.consultar_cupos(actividad, inicio) < cantidad:
             return None
