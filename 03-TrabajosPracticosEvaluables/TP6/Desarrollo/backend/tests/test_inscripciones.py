@@ -207,3 +207,37 @@ def test_cup_05_rechaza_grupo_que_supera_cupos_disponibles():
     assert len(servicio.inscripciones) == 0
     assert servicio.ocupacion[("Tirolesa", inicio)] == 8
     assert servicio.consultar_cupos("Tirolesa", inicio) == 2
+
+def test_cup_06_safari_ocupa_sus_ocho_cupos():
+    """CUP-06: Safari permite ocupar sus 8 cupos."""
+
+    zona = timezone(timedelta(hours=-3))
+    inicio = datetime(2026, 10, 20, 10, 0, tzinfo=zona)
+    ahora = datetime(2026, 10, 19, 12, 0, tzinfo=zona)
+
+    visitantes = [
+        Visitante(
+            nombre=f"Visitante {i}",
+            dni=str(10000000 + i),
+            edad=20,
+            talle=None,
+        )
+        for i in range(8)
+    ]
+
+    servicio = ServicioInscripciones()
+
+    resultado = servicio.inscribir(
+        actividad="Safari",
+        inicio=inicio,
+        ahora=ahora,
+        cantidad=8,
+        visitantes=visitantes,
+        actividad_terminos="Safari",
+        acepto_terminos=True,
+    )
+
+    assert resultado is not None
+    assert len(resultado.visitantes) == 8
+    assert servicio.ocupacion[("Safari", inicio)] == 8
+    assert servicio.consultar_cupos("Safari", inicio) == 0
