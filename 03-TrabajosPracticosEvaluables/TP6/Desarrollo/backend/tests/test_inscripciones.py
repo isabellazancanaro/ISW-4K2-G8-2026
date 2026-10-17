@@ -317,3 +317,34 @@ def test_cup_08_cupos_independientes_por_turno():
 
     assert servicio.ocupacion[("Tirolesa", inicio_10)] == 3
     assert servicio.ocupacion.get(("Tirolesa", inicio_11), 0) == 0
+
+def test_est_03_datos_invalidos_no_modifican_estado():
+    """EST-03: una inscripción inválida no registra ni ocupa cupos."""
+
+    zona = timezone(timedelta(hours=-3))
+    inicio = datetime(2026, 10, 20, 10, 0, tzinfo=zona)
+    ahora = datetime(2026, 10, 19, 12, 0, tzinfo=zona)
+
+    visitante = Visitante(
+        nombre="Ana García",
+        dni=None,
+        edad=20,
+        talle="M",
+    )
+
+    servicio = ServicioInscripciones()
+
+    resultado = servicio.inscribir(
+        actividad="Tirolesa",
+        inicio=inicio,
+        ahora=ahora,
+        cantidad=1,
+        visitantes=[visitante],
+        actividad_terminos="Tirolesa",
+        acepto_terminos=True,
+    )
+
+    assert resultado is None
+    assert len(servicio.inscripciones) == 0
+    assert servicio.consultar_cupos("Tirolesa", inicio) == 10
+    assert servicio.ocupacion.get(("Tirolesa", inicio), 0) == 0
