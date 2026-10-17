@@ -135,18 +135,33 @@ class ServicioInscripciones:
             visitantes=list(visitantes),
         )
 
-        self._inscripciones.append(inscripcion)
-
+        
         clave = (actividad, inicio)
 
+        # Registrar la inscripción y actualizar la ocupación.
+        self._inscripciones.append(inscripcion)
         self.ocupacion[clave] = (
             self.ocupacion.get(clave, 0) + cantidad
         )
-        
-        if self._servicio_confirmaciones is not None and email_titular is not None:
-            self._servicio_confirmaciones.confirmar(
-                inscripcion,
-                email_titular,
-            )
+
+        try:
+            if (
+                self._servicio_confirmaciones is not None
+                and email_titular is not None
+            ):
+                self._servicio_confirmaciones.confirmar(
+                    inscripcion,
+                    email_titular,
+                )
+
+        except Exception:
+            # Revertir el registro si falla la confirmación.
+            self._inscripciones.remove(inscripcion)
+            self.ocupacion[clave] -= cantidad
+
+            if self.ocupacion[clave] == 0:
+                del self.ocupacion[clave]
+
+            raise
 
         return inscripcion
