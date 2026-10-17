@@ -382,3 +382,38 @@ def test_est_04_terminos_no_aceptados_no_modifican_estado():
     assert servicio.inscripciones == inscripciones_anteriores
     assert servicio.ocupacion == ocupacion_anterior
     assert servicio.consultar_cupos("Tirolesa", inicio) == 10
+
+def test_est_01_conserva_inscripcion_confirmada():
+    """EST-01: una inscripción confirmada queda disponible para consulta."""
+
+    zona = timezone(timedelta(hours=-3))
+    inicio = datetime(2026, 10, 20, 10, 0, tzinfo=zona)
+    ahora = datetime(2026, 10, 19, 12, 0, tzinfo=zona)
+
+    visitante = Visitante(
+        nombre="Ana García",
+        dni="12345678",
+        edad=20,
+        talle="M",
+    )
+
+    servicio = ServicioInscripciones()
+
+    resultado = servicio.inscribir(
+        actividad="Tirolesa",
+        inicio=inicio,
+        ahora=ahora,
+        cantidad=1,
+        visitantes=[visitante],
+        actividad_terminos="Tirolesa",
+        acepto_terminos=True,
+    )
+
+    inscripciones_guardadas = servicio.inscripciones
+
+    assert resultado is not None
+    assert len(inscripciones_guardadas) == 1
+    assert inscripciones_guardadas[0] == resultado
+    assert inscripciones_guardadas[0].actividad == "Tirolesa"
+    assert inscripciones_guardadas[0].inicio == inicio
+    assert inscripciones_guardadas[0].visitantes == [visitante]
