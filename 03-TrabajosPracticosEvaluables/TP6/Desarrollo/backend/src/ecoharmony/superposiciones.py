@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 
 from ecoharmony.inscripciones import Inscripcion
+from ecoharmony.models.visitante import Visitante
 
 DURACION_ACTIVIDAD = timedelta(hours=1)
 
@@ -21,3 +22,15 @@ def tiene_superposicion(
             return True
 
     return False
+
+
+
+def tiene_superposicion_grupo(
+    visitantes: list[Visitante],
+    inicio: datetime,
+    inscripciones_existentes: list[Inscripcion],
+) -> bool:
+    return any(
+        tiene_superposicion(visitante.dni, inicio, inscripciones_existentes)
+        for visitante in visitantes
+    )
