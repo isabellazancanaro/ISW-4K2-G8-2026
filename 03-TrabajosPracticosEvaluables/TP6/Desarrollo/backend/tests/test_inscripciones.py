@@ -577,3 +577,38 @@ def test_mail_01_inscripcion_valida_genera_confirmacion():
 
     assert resultado is not None
     assert len(notificador.enviados) == 1
+
+def test_mail_04_no_envia_correo_si_rechaza_inscripcion():
+    """MAIL-04 integral: una inscripción rechazada no genera correo."""
+
+    zona = timezone(timedelta(hours=-3))
+    inicio = datetime(2026, 10, 20, 10, 0, tzinfo=zona)
+    ahora = datetime(2026, 10, 19, 12, 0, tzinfo=zona)
+
+    notificador = NotificadorSimulado()
+    servicio = ServicioInscripciones(
+        servicio_confirmaciones=ServicioConfirmaciones(notificador)
+    )
+
+    visitante = Visitante(
+        nombre="Ana García",
+        dni="12345678",
+        edad=20,
+        talle="M",
+    )
+
+    resultado = servicio.inscribir(
+        actividad="Tirolesa",
+        inicio=inicio,
+        ahora=ahora,
+        cantidad=1,
+        visitantes=[visitante],
+        actividad_terminos="Tirolesa",
+        acepto_terminos=False,
+        email_titular="titular@example.com",
+    )
+
+    assert resultado is None
+    assert notificador.enviados == []
+    assert servicio.inscripciones == ()
+    assert servicio.consultar_cupos("Tirolesa", inicio) == 10
