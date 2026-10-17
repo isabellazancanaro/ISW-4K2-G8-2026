@@ -13,6 +13,14 @@ class Inscripcion:
 
 
 class ServicioInscripciones:
+
+    def __init__(self):
+        self._inscripciones: list[Inscripcion] = []
+
+    @property
+    def inscripciones(self) -> tuple[Inscripcion, ...]:
+        return tuple(self._inscripciones)
+
     def inscribir(
         self,
         actividad: str,
@@ -23,8 +31,13 @@ class ServicioInscripciones:
         actividad_terminos: str,
         acepto_terminos: bool,
     ) -> Inscripcion:
-        return Inscripcion(
+
+        inscripcion = Inscripcion(
             actividad=actividad,
             inicio=inicio,
-            visitantes=visitantes,
+            visitantes=list(visitantes),
         )
+
+        self._inscripciones.append(inscripcion)
+
+        return inscripcion
