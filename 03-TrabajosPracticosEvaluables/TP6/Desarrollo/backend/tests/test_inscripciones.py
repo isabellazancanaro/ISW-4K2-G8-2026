@@ -276,3 +276,44 @@ def test_cup_07_capacidad_de_doce_personas(actividad):
     assert len(resultado.visitantes) == 12
     assert servicio.ocupacion[(actividad, inicio)] == 12
     assert servicio.consultar_cupos(actividad, inicio) == 0
+
+def test_cup_08_cupos_independientes_por_turno():
+    """CUP-08: cada turno mantiene su propia ocupación."""
+
+    zona = timezone(timedelta(hours=-3))
+    inicio_10 = datetime(2026, 10, 20, 10, 0, tzinfo=zona)
+    inicio_11 = datetime(2026, 10, 20, 11, 0, tzinfo=zona)
+    ahora = datetime(2026, 10, 19, 12, 0, tzinfo=zona)
+
+    visitantes = [
+        Visitante(
+            nombre=f"Visitante {i}",
+            dni=str(10000000 + i),
+            edad=20,
+            talle="M",
+        )
+        for i in range(3)
+    ]
+
+    servicio = ServicioInscripciones()
+
+    resultado = servicio.inscribir(
+        actividad="Tirolesa",
+        inicio=inicio_10,
+        ahora=ahora,
+        cantidad=3,
+        visitantes=visitantes,
+        actividad_terminos="Tirolesa",
+        acepto_terminos=True,
+    )
+
+    assert resultado is not None
+
+    # Se ocuparon 3 lugares a las 10:00.
+    assert servicio.consultar_cupos("Tirolesa", inicio_10) == 7
+
+    # El turno de las 11:00 mantiene sus 10 cupos.
+    assert servicio.consultar_cupos("Tirolesa", inicio_11) == 10
+
+    assert servicio.ocupacion[("Tirolesa", inicio_10)] == 3
+    assert servicio.ocupacion.get(("Tirolesa", inicio_11), 0) == 0
