@@ -488,3 +488,57 @@ def test_est_02_ocupacion_refleja_inscripciones():
     assert total_participantes == servicio.ocupacion[
         ("Tirolesa", inicio)
     ]
+
+def test_sup_05_rechaza_grupo_con_participante_superpuesto():
+    """SUP-05 integral: rechaza todo el grupo si alguien tiene un conflicto."""
+
+    zona = timezone(timedelta(hours=-3))
+    inicio = datetime(2026, 10, 20, 10, 0, tzinfo=zona)
+    ahora = datetime(2026, 10, 19, 12, 0, tzinfo=zona)
+
+    servicio = ServicioInscripciones()
+
+    # Primera inscripción: Ana se anota en Safari a las 10:00.
+    ana = Visitante(
+        nombre="Ana García",
+        dni="12345678",
+        edad=20,
+        talle=None,
+    )
+
+    primera = servicio.inscribir(
+        actividad="Safari",
+        inicio=inicio,
+        ahora=ahora,
+        cantidad=1,
+        visitantes=[ana],
+        actividad_terminos="Safari",
+        acepto_terminos=True,
+    )
+
+    assert primera is not None
+
+    # Nuevo grupo: Ana intenta inscribirse también en Tirolesa.
+    grupo = [
+        Visitante("Juan Pérez", "23456789", 25, "M"),
+        Visitante("Ana García", "12345678", 20, "M"),
+        Visitante("Lucía Gómez", "34567890", 30, "S"),
+    ]
+
+    inscripciones_antes = servicio.inscripciones
+    ocupacion_antes = dict(servicio.ocupacion)
+
+    resultado = servicio.inscribir(
+        actividad="Tirolesa",
+        inicio=inicio,
+        ahora=ahora,
+        cantidad=3,
+        visitantes=grupo,
+        actividad_terminos="Tirolesa",
+        acepto_terminos=True,
+    )
+
+    assert resultado is None
+    assert servicio.inscripciones == inscripciones_antes
+    assert servicio.ocupacion == ocupacion_antes
+    assert servicio.consultar_cupos("Tirolesa", inicio) == 10
