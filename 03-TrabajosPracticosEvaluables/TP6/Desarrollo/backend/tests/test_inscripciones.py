@@ -98,3 +98,38 @@ def test_cup_02_ocupa_el_ultimo_cupo_disponible():
     assert resultado is not None
     assert servicio.ocupacion[("Tirolesa", inicio)] == 10
     assert servicio.consultar_cupos("Tirolesa", inicio) == 0
+
+def test_cup_03_inscribe_diez_personas_en_tirolesa():
+    """CUP-03: una inscripción grupal ocupa los 10 cupos de Tirolesa."""
+
+    zona = timezone(timedelta(hours=-3))
+    inicio = datetime(2026, 10, 20, 10, 0, tzinfo=zona)
+    ahora = datetime(2026, 10, 19, 12, 0, tzinfo=zona)
+
+    visitantes = [
+        Visitante(
+            nombre=f"Visitante {i}",
+            dni=f"{10000000 + i}",
+            edad=20,
+            talle="M",
+        )
+        for i in range(10)
+    ]
+
+    servicio = ServicioInscripciones()
+
+    resultado = servicio.inscribir(
+        actividad="Tirolesa",
+        inicio=inicio,
+        ahora=ahora,
+        cantidad=10,
+        visitantes=visitantes,
+        actividad_terminos="Tirolesa",
+        acepto_terminos=True,
+    )
+
+    assert resultado is not None
+    assert len(resultado.visitantes) == 10
+    assert len(servicio.inscripciones) == 1
+    assert servicio.ocupacion[("Tirolesa", inicio)] == 10
+    assert servicio.consultar_cupos("Tirolesa", inicio) == 0
