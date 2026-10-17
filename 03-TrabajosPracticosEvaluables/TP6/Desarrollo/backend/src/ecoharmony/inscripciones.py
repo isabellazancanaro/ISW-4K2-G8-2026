@@ -1,21 +1,18 @@
 
 from dataclasses import dataclass
 from datetime import datetime
-from ecoharmony.disponibilidad import consultar_disponibilidad
-from ecoharmony.models.visitante import Visitante
 
 from ecoharmony.actividades import es_actividad_valida
-from ecoharmony.calendario import es_fecha_habilitada
-from ecoharmony.horarios import es_horario_valido
 from ecoharmony.anticipacion import esta_en_ventana_de_reserva
-
-from ecoharmony.datos_visitante import (identificaciones_grupo_validas)
-from ecoharmony.cantidad_participantes import (cantidad_coincide_con_visitantes)
+from ecoharmony.calendario import es_fecha_habilitada
+from ecoharmony.cantidad_participantes import cantidad_coincide_con_visitantes
+from ecoharmony.datos_visitante import identificaciones_grupo_validas
+from ecoharmony.disponibilidad import consultar_disponibilidad
 from ecoharmony.edades import es_edad_valida_para_actividad
+from ecoharmony.horarios import es_horario_valido
+from ecoharmony.models.visitante import Visitante
 from ecoharmony.talles import es_talle_valido_para_actividad
 from ecoharmony.terminos import es_aceptacion_terminos_valida
-
-
 
 @dataclass(frozen=True)
 class Inscripcion:
@@ -106,7 +103,7 @@ class ServicioInscripciones:
         visitantes: list[Visitante],
         actividad_terminos: str,
         acepto_terminos: bool,
-    ) -> Inscripcion:
+    ) -> Inscripcion | None:
         
         if not self._solicitud_valida(
             actividad,
