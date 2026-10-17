@@ -133,3 +133,40 @@ def test_cup_03_inscribe_diez_personas_en_tirolesa():
     assert len(servicio.inscripciones) == 1
     assert servicio.ocupacion[("Tirolesa", inicio)] == 10
     assert servicio.consultar_cupos("Tirolesa", inicio) == 0
+
+def test_cup_04_rechaza_inscripcion_sin_cupos():
+    """CUP-04: no permite inscribir cuando el turno está lleno."""
+
+    zona = timezone(timedelta(hours=-3))
+    inicio = datetime(2026, 10, 20, 10, 0, tzinfo=zona)
+    ahora = datetime(2026, 10, 19, 12, 0, tzinfo=zona)
+
+    visitante = Visitante(
+        nombre="Ana García",
+        dni="12345678",
+        edad=20,
+        talle="M",
+    )
+
+    servicio = ServicioInscripciones()
+
+    # Los 10 cupos de Tirolesa están ocupados.
+    servicio.ocupacion[("Tirolesa", inicio)] = 10
+
+    ocupacion_anterior = dict(servicio.ocupacion)
+    inscripciones_anteriores = len(servicio.inscripciones)
+
+    resultado = servicio.inscribir(
+        actividad="Tirolesa",
+        inicio=inicio,
+        ahora=ahora,
+        cantidad=1,
+        visitantes=[visitante],
+        actividad_terminos="Tirolesa",
+        acepto_terminos=True,
+    )
+
+    assert resultado is None
+    assert servicio.ocupacion == ocupacion_anterior
+    assert len(servicio.inscripciones) == inscripciones_anteriores
+    assert servicio.consultar_cupos("Tirolesa", inicio) == 0
