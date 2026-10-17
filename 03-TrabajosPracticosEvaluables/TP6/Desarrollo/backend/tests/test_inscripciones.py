@@ -725,3 +725,34 @@ def test_est_rechaza_operacion_si_falla_confirmacion():
     # Los cupos deben permanecer intactos.
     assert servicio.consultar_cupos("Tirolesa", inicio) == 10
     assert servicio.ocupacion.get(("Tirolesa", inicio), 0) == 0
+
+def test_inscripcion_no_comparte_lista_original_de_visitantes():
+    """Modificar la lista recibida no altera una inscripción confirmada."""
+
+    zona = timezone(timedelta(hours=-3))
+    inicio = datetime(2026, 10, 20, 10, 0, tzinfo=zona)
+    ahora = datetime(2026, 10, 19, 12, 0, tzinfo=zona)
+
+    visitante = Visitante("Ana García", "12345678", 20, "M")
+    visitantes = [visitante]
+
+    servicio = ServicioInscripciones()
+
+    resultado = servicio.inscribir(
+        actividad="Tirolesa",
+        inicio=inicio,
+        ahora=ahora,
+        cantidad=1,
+        visitantes=visitantes,
+        actividad_terminos="Tirolesa",
+        acepto_terminos=True,
+    )
+
+    assert resultado is not None
+
+    visitantes.append(
+        Visitante("Juan Pérez", "23456789", 25, "L")
+    )
+
+    assert len(resultado.visitantes) == 1
+    assert servicio.consultar_cupos("Tirolesa", inicio) == 9
