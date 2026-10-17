@@ -1,7 +1,7 @@
-
-
 from datetime import datetime, timedelta, timezone
 
+from ecoharmony.inscripciones import Inscripcion
+from ecoharmony.models.visitante import Visitante
 from ecoharmony.superposiciones import (
     tiene_superposicion,
     tiene_superposicion_grupo,
