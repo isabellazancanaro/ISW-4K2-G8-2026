@@ -681,3 +681,47 @@ def test_mail_05_un_correo_al_titular_para_grupo():
 
     assert len(set(codigos)) == 3
 
+def test_est_rechaza_operacion_si_falla_confirmacion():
+    """Una falla de confirmación no debe dejar registros parciales."""
+
+    zona = timezone(timedelta(hours=-3))
+    inicio = datetime(2026, 10, 20, 10, 0, tzinfo=zona)
+    ahora = datetime(2026, 10, 19, 12, 0, tzinfo=zona)
+
+    class ConfirmacionesConError:
+        def confirmar(self, inscripcion, email_titular):
+            raise RuntimeError("Error al generar confirmación")
+
+    servicio = ServicioInscripciones(
+        servicio_confirmaciones=ConfirmacionesConError()
+    )
+
+    visitante = Visitante(
+        nombre="Ana García",
+        dni="12345678",
+        edad=20,
+        talle="M",
+    )
+
+    # El servicio de confirmaciones simula un fallo.
+    with pytest.raises(
+        RuntimeError,
+        match="Error al generar confirmación"
+    ):
+        servicio.inscribir(
+            actividad="Tirolesa",
+            inicio=inicio,
+            ahora=ahora,
+            cantidad=1,
+            visitantes=[visitante],
+            actividad_terminos="Tirolesa",
+            acepto_terminos=True,
+            email_titular="titular@example.com",
+        )
+
+    # La inscripción no debe haber quedado registrada.
+    assert servicio.inscripciones == ()
+
+    # Los cupos deben permanecer intactos.
+    assert servicio.consultar_cupos("Tirolesa", inicio) == 10
+    assert servicio.ocupacion.get(("Tirolesa", inicio), 0) == 0
