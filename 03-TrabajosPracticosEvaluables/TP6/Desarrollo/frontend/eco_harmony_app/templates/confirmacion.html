@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Inscripción realizada</title>
+  <link rel="icon" href="{{ url_for('static', filename='logo.png') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <header class="cabecera">
+    <a href="/">
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="">
+      <span>EcoHarmony <span>Park</span></span>
+    </a>
+  </header>
+
+  <main>
+  <div class="tarjeta confirmacion">
+    <div class="ok-icono">✓</div>
+    <h1>Inscripción realizada correctamente</h1>
+
+    <ul class="datos">
+      <li><span>Número de inscripción</span> <strong>{{ inscripcion['id'] }}</strong></li>
+      <li><span>Actividad</span> <strong>{{ inscripcion['actividad'] }}</strong></li>
+      <li><span>Turno</span> <strong>{{ inscripcion['turno'].replace('T', ' ') }}</strong></li>
+      <li><span>Email</span> <strong>{{ inscripcion['email'] }}</strong></li>
+    </ul>
+
+    <div class="tabla-wrap">
+      <table>
+        <tr><th>#</th><th>Nombre</th><th>DNI</th><th>Edad</th><th>Talle</th></tr>
+        {% for v in visitantes %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{{ v['nombre'] or '-' }}</td>
+          <td>{{ v['dni'] }}</td>
+          <td>{{ v['edad'] }}</td>
+          <td>{{ v['talle'] or '-' }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+
+    <p class="acciones"><a class="btn btn-claro" href="/">Volver al inicio</a></p>
+  </div>
+  </main>
+</body>
+</html>

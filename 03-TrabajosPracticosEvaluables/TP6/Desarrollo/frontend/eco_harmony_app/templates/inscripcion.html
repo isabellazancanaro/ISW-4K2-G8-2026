@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Inscribirme a actividad</title>
+  <link rel="icon" href="{{ url_for('static', filename='logo.png') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <header class="cabecera">
+    <a href="/">
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="">
+      <span>EcoHarmony <span>Park</span></span>
+    </a>
+  </header>
+
+  <main>
+  <div class="tarjeta">
+  <h1>Inscribirme a actividad</h1>
+
+  <form method="post" action="/inscripcion" autocomplete="off">
+    <div>
+      <label for="actividad">Actividad</label>
+      <select id="actividad" name="actividad">
+        <option value="">-- Seleccioná una actividad --</option>
+        {% for actividad in actividades %}
+        <option value="{{ actividad['nombre'] }}"
+                data-vestimenta="{{ actividad['requiere_vestimenta'] }}"
+                data-terminos="{{ actividad['terminos'] }}">{{ actividad['nombre'] }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div>
+      <label for="dia">Día</label>
+      <!-- sin name: el día no se envía, viaja dentro del turno -->
+      <select id="dia" disabled>
+        <option value="">-- Seleccioná un día --</option>
+        {% for valor, etiqueta in dias %}
+        <option value="{{ valor }}">{{ etiqueta }}</option>
+        {% endfor %}
+      </select>
+      {% if not dias %}
+      <p class="aviso-info">No hay días con turnos disponibles en este momento.</p>
+      {% endif %}
+    </div>
+
+    <div>
+      <label for="hora">Horario</label>
+      <select id="hora" name="turno" disabled>
+        <option value="">-- Seleccioná un horario --</option>
+      </select>
+      <p id="aviso-hora" class="aviso"></p>
+    </div>
+
+    <div class="fila-cantidad">
+      <div class="campo">
+        <label for="cantidad">Cantidad de visitantes</label>
+        <input type="number" id="cantidad" min="1" value="1" disabled>
+      </div>
+      <button type="button" id="btn-completar" disabled>Completar datos</button>
+    </div>
+
+    <div id="visitantes"></div>
+
+    <div id="bloque-final">
+      <div>
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email">
+      </div>
+
+      <label class="terminos">
+        <input type="checkbox" id="terminos" name="terminos" value="1">
+        <span>Acepto los <button type="button" id="btn-terminos" class="link" aria-expanded="false">términos y condiciones</button> de la actividad</span>
+      </label>
+      <div id="terminos-panel" class="terminos-panel" hidden>
+        <div class="terminos-cab">
+          <button type="button" id="cerrar-x" class="cruz" aria-label="Cerrar términos y condiciones">✕</button>
+          <strong>Términos y condiciones</strong>
+        </div>
+        <p id="terminos-texto"></p>
+        <button type="button" id="cerrar-terminos" class="btn-cerrar">Cerrar</button>
+      </div>
+
+      <div>
+        <button type="submit">Inscribirme</button>
+      </div>
+    </div>
+  </form>
+  </div>
+  </main>
+
+  <script>
+    const TALLES = {{ talles | tojson }};
+
+    const actividad = document.getElementById("actividad");
+    const dia = document.getElementById("dia");
+    const hora = document.getElementById("hora");
+    const aviso = document.getElementById("aviso-hora");
+    const cantidad = document.getElementById("cantidad");
+    const btnCompletar = document.getElementById("btn-completar");
+    const contenedor = document.getElementById("visitantes");
+    const textoTerminos = document.getElementById("terminos-texto");
+    const btnTerminos = document.getElementById("btn-terminos");
+    const casillaTerminos = document.getElementById("terminos");
+    const panelTerminos = document.getElementById("terminos-panel");
+
+    const hayDias = dia.options.length > 1;
+    // Solo para pruebas: si la URL trae ?ahora=..., se lo reenviamos al servidor
+    const ahoraDePrueba = new URLSearchParams(location.search).get("ahora");
+
+    // ---------- términos y condiciones (se muestran al clickear el link) ----------
+    function ocultarTerminos() {
+      panelTerminos.hidden = true;
+      btnTerminos.setAttribute("aria-expanded", "false");
+    }
+
+    btnTerminos.addEventListener("click", () => {
+      const mostrar = panelTerminos.hidden;
+      panelTerminos.hidden = !mostrar;
+      btnTerminos.setAttribute("aria-expanded", String(mostrar));
+    });
+
+    // La cruz de arriba y el botón "Cerrar" de abajo hacen lo mismo
+    for (const id of ["cerrar-x", "cerrar-terminos"]) {
+      document.getElementById(id).addEventListener("click", () => {
+        ocultarTerminos();
+        btnTerminos.focus();
+      });
+    }
+
+    // También se cierra con la tecla Escape
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !panelTerminos.hidden) ocultarTerminos();
+    });
+
+    // Los términos son uno distinto por actividad: se actualizan al elegirla
+    function actualizarTerminos() {
+      const opcion = actividad.selectedOptions[0];
+      textoTerminos.textContent = opcion.dataset.terminos || "";
+      casillaTerminos.checked = false;
+      btnTerminos.disabled = !actividad.value;
+      ocultarTerminos();
+    }
+
+    // ---------- datos de los visitantes ----------
+    function ocultarDatos() {
+      contenedor.replaceChildren();
+    }
+
+    function reiniciarDatos() {
+      ocultarDatos();
+      cantidad.disabled = true;
+      btnCompletar.disabled = true;
+    }
+
+    function campoTexto(etiqueta, nombre) {
+      const label = document.createElement("label");
+      label.textContent = etiqueta + " ";
+      const input = document.createElement("input");
+      input.type = "text";
+      input.name = nombre;
+      label.appendChild(input);
+      const div = document.createElement("div");
+      div.appendChild(label);
+      return div;
+    }
+
+    function campoTalle() {
+      const label = document.createElement("label");
+      label.textContent = "Talle de vestimenta ";
+      const select = document.createElement("select");
+      select.name = "talle";
+      const vacia = document.createElement("option");
+      vacia.value = "";
+      vacia.textContent = "-- Talle --";
+      select.appendChild(vacia);
+      for (const talle of TALLES) {
+        const opcion = document.createElement("option");
+        opcion.value = talle;
+        opcion.textContent = talle;
+        select.appendChild(opcion);
+      }
+      label.appendChild(select);
+      const div = document.createElement("div");
+      div.appendChild(label);
+      return div;
+    }
+
+    btnCompletar.addEventListener("click", () => {
+      const n = Math.max(1, parseInt(cantidad.value, 10) || 1);
+      cantidad.value = n;
+
+      const opcion = actividad.selectedOptions[0];
+      const pideTalle = opcion.dataset.vestimenta === "1";
+
+      contenedor.replaceChildren();
+      for (let i = 1; i <= n; i++) {
+        const grupo = document.createElement("fieldset");
+        const leyenda = document.createElement("legend");
+        leyenda.textContent = `Visitante ${i}`;
+        grupo.append(
+          leyenda,
+          campoTexto("Nombre (opcional)", "nombre"),
+          campoTexto("DNI", "dni"),
+          campoTexto("Edad", "edad"),
+        );
+        if (pideTalle) grupo.append(campoTalle());
+        contenedor.append(grupo);
+      }
+    });
+
+    // Si cambia la cantidad, hay que volver a completar los datos
+    cantidad.addEventListener("input", ocultarDatos);
+
+    // ---------- día y horario ----------
+    function vaciarHoras() {
+      hora.length = 1;  // deja solo la opción "-- Seleccioná un horario --"
+      hora.value = "";
+      hora.disabled = true;
+      aviso.textContent = "";
+      reiniciarDatos();
+    }
+
+    async function cargarHoras() {
+      vaciarHoras();
+      if (!actividad.value || !dia.value) return;
+
+      const pedida = { actividad: actividad.value, dia: dia.value };
+      const params = new URLSearchParams({ actividad: pedida.actividad, fecha: pedida.dia });
+      if (ahoraDePrueba) params.set("ahora", ahoraDePrueba);
+
+      try {
+        const respuesta = await fetch("/api/horarios?" + params);
+        if (!respuesta.ok) throw new Error();
+        const horarios = await respuesta.json();
+
+        // Si mientras tanto el usuario cambió de actividad o día, descartamos esta respuesta
+        if (actividad.value !== pedida.actividad || dia.value !== pedida.dia) return;
+
+        if (horarios.length === 0) {
+          aviso.textContent = "No hay horarios disponibles ese día.";
+          return;
+        }
+
+        for (const h of horarios) {
+          const opcion = document.createElement("option");
+          opcion.value = h.valor;
+          if (h.disponibles > 0) {
+            opcion.textContent = `${h.texto} · quedan ${h.disponibles}`;
+          } else {
+            opcion.textContent = `${h.texto} · completo`;
+            opcion.disabled = true;
+          }
+          hora.appendChild(opcion);
+        }
+        hora.disabled = false;
+      } catch {
+        aviso.textContent = "No se pudieron cargar los horarios. Probá de nuevo.";
+      }
+    }
+
+    actividad.addEventListener("change", () => {
+      if (!actividad.value) dia.value = "";
+      dia.disabled = !actividad.value || !hayDias;
+      actualizarTerminos();
+      cargarHoras();
+    });
+
+    dia.addEventListener("change", cargarHoras);
+
+    hora.addEventListener("change", () => {
+      reiniciarDatos();
+      const hayTurno = hora.value !== "";
+      cantidad.disabled = !hayTurno;
+      btnCompletar.disabled = !hayTurno;
+    });
+
+    actualizarTerminos();  // estado inicial: link deshabilitado hasta elegir actividad
+  </script>
+</body>
+</html>
