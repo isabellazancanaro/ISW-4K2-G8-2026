@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from datetime import datetime
 
+from ecoharmony.codigos_qr import generar_qr_png
 from ecoharmony.inscripciones import Inscripcion
 from ecoharmony.models.visitante import Visitante
 
@@ -9,6 +10,7 @@ from ecoharmony.models.visitante import Visitante
 class ParticipanteConfirmado:
     visitante: Visitante
     codigo_qr: str
+    imagen_qr: bytes
 
 
 @dataclass(frozen=True)
@@ -38,13 +40,7 @@ class ServicioConfirmaciones:
         numero_orden = f"ORD-{self._ultimo_numero:04d}"
 
         participantes = tuple(
-            ParticipanteConfirmado(
-                visitante=visitante,
-                codigo_qr=(
-                    f"{numero_orden}|{visitante.dni}|"
-                    f"{inscripcion.actividad}|{inscripcion.inicio.isoformat()}"
-                ),
-            )
+            self._confirmar_participante(numero_orden, inscripcion, visitante)
             for visitante in inscripcion.visitantes
         )
 
@@ -56,4 +52,20 @@ class ServicioConfirmaciones:
                 inicio=inscripcion.inicio,
                 participantes=participantes,
             )
+        )
+
+    def _confirmar_participante(
+        self,
+        numero_orden: str,
+        inscripcion: Inscripcion,
+        visitante: Visitante,
+    ) -> ParticipanteConfirmado:
+        codigo_qr = (
+            f"{numero_orden}|{visitante.dni}|"
+            f"{inscripcion.actividad}|{inscripcion.inicio.isoformat()}"
+        )
+        return ParticipanteConfirmado(
+            visitante=visitante,
+            codigo_qr=codigo_qr,
+            imagen_qr=generar_qr_png(codigo_qr),
         )
