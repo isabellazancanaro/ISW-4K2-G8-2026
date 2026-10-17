@@ -612,3 +612,38 @@ def test_mail_04_no_envia_correo_si_rechaza_inscripcion():
     assert notificador.enviados == []
     assert servicio.inscripciones == ()
     assert servicio.consultar_cupos("Tirolesa", inicio) == 10
+
+def test_mail_05_un_correo_al_titular_para_grupo():
+    """MAIL-05 integral: un correo al titular de tres participantes."""
+
+    zona = timezone(timedelta(hours=-3))
+    inicio = datetime(2026, 10, 20, 10, 0, tzinfo=zona)
+    ahora = datetime(2026, 10, 19, 12, 0, tzinfo=zona)
+
+    notificador = NotificadorSimulado()
+    servicio = ServicioInscripciones(
+        servicio_confirmaciones=ServicioConfirmaciones(notificador)
+    )
+
+    visitantes = [
+        Visitante("Ana García", "12345678", 20, "M"),
+        Visitante("Juan Pérez", "23456789", 25, "L"),
+        Visitante("Lucía Gómez", "34567890", 30, "S"),
+    ]
+
+    resultado = servicio.inscribir(
+        actividad="Tirolesa",
+        inicio=inicio,
+        ahora=ahora,
+        cantidad=3,
+        visitantes=visitantes,
+        actividad_terminos="Tirolesa",
+        acepto_terminos=True,
+        email_titular="titular@example.com",
+    )
+
+    assert resultado is not None
+    assert len(servicio.inscripciones) == 1
+    assert servicio.ocupacion[("Tirolesa", inicio)] == 3
+
+    assert len(notificador.enviados) == 1
