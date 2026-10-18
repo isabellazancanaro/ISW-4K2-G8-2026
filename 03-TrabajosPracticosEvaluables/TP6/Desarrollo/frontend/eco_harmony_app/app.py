@@ -16,6 +16,15 @@ from .horarios import dias_inscribibles, horas_inscribibles
 
 ZONA = timezone(timedelta(hours=-3))
 TALLES = tuple(sorted(TALLES_VALIDOS, key=("XS", "S", "M", "L", "XL", "XXL").index))
+DIAS = ("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo")
+MESES = ("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio",
+         "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre")
+
+
+def formatear_turno(inicio):
+    inicio = inicio.astimezone(ZONA)
+    return (f"{DIAS[inicio.weekday()]} {inicio.day} de {MESES[inicio.month - 1]} "
+            f"{inicio.year} {inicio:%H:%M}")
 
 
 def crear_app(config=None):
@@ -23,6 +32,7 @@ def crear_app(config=None):
     app.config.from_mapping(RELOJ=lambda: datetime.now(ZONA))
     if config:
         app.config.update(config)
+        app.add_template_filter(formatear_turno, "turno_legible")
 
     notificador = NotificadorSimulado()
     servicio = ServicioInscripciones(ServicioConfirmaciones(notificador))
@@ -128,7 +138,7 @@ def crear_app(config=None):
             abort(404)
         inscripcion = {
             "id": inscripcion_id, "numero_orden": correo.numero_orden,
-            "actividad": correo.actividad, "turno": correo.inicio.isoformat(timespec="minutes"),
+            "actividad": correo.actividad, "turno": formatear_turno(correo.inicio),
             "email": correo.destinatario,
         }
         visitantes = [

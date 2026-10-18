@@ -26,10 +26,11 @@
     <ul class="datos">
       <li><span>Número de orden</span> <strong>{{ inscripcion['numero_orden'] }}</strong></li>
       <li><span>Actividad</span> <strong>{{ inscripcion['actividad'] }}</strong></li>
-      <li><span>Turno</span> <strong>{{ inscripcion['turno'].replace('T', ' ') }}</strong></li>
+      <li><span>Turno</span> <strong>{{ inscripcion['turno'] }}</strong></li>
       <li><span>Email</span> <strong>{{ inscripcion['email'] }}</strong></li>
     </ul>
 
+    <h2>Visitantes</h2>
     <div class="tabla-wrap">
       <table>
         <tr><th>#</th><th>Nombre</th><th>DNI</th><th>Edad</th><th>Talle</th></tr>
@@ -45,37 +46,61 @@
       </table>
     </div>
 
-    <section aria-labelledby="titulo-qr">
-      <h2 id="titulo-qr">QR de los participantes</h2>
-      <div class="lista-qr">
-        {% for v in visitantes %}
-        <article class="entrada-qr">
-          <h3>{{ v['nombre'] }}</h3>
-          <p>DNI {{ v['dni'] }}</p>
-          <img class="codigo-qr" src="{{ v['qr_data_uri'] }}" alt="QR de {{ v['nombre'] }}" width="280" height="280">
-          <a class="btn" href="{{ v['qr_data_uri'] }}" download="{{ inscripcion['numero_orden'] }}-participante-{{ loop.index }}.png">Descargar QR</a>
-        </article>
-        {% endfor %}
-      </div>
-    </section>
-
     <section class="correo-simulado" aria-labelledby="titulo-correo">
       <h2 id="titulo-correo">Confirmación por correo (simulada)</h2>
       <p role="status">Se generó un único correo simulado para <strong>{{ correo.destinatario }}</strong>.</p>
-      <p>Esta demostración no envía emails reales. Podés consultar aquí el contenido de la confirmación y descargar los QR.</p>
-      <dl>
-        <dt>Para</dt><dd>{{ correo.destinatario }}</dd>
-        <dt>Asunto</dt><dd>Confirmación {{ correo.numero_orden }} — EcoHarmony Park</dd>
-      </dl>
-      <p>Tu inscripción a <strong>{{ correo.actividad }}</strong> está confirmada para el {{ correo.inicio.strftime('%d/%m/%Y a las %H:%M') }} (hora de Argentina).</p>
-      <p>Número de orden: <strong>{{ correo.numero_orden }}</strong>.</p>
-      <ul>{% for p in correo.participantes %}<li>{{ p.visitante.nombre }} — DNI {{ p.visitante.dni }}</li>{% endfor %}</ul>
-      <p>El QR de cada participante está disponible arriba.</p>
+      <p>Esta demostración no envía emails reales. Podés consultar el contenido del correo y descargar los QR.</p>
+      <button type="button" id="ver-mail">Ver mail</button>
     </section>
 
     <p class="acciones"><a class="btn" href="{{ url_for('formulario_inscripcion') }}">Inscribir a otra actividad</a></p>
     <p class="acciones"><a class="btn btn-claro" href="/">Volver al inicio</a></p>
   </div>
   </main>
+
+  <dialog id="mail" class="mail" aria-labelledby="mail-asunto"
+          data-actividad="{{ correo.actividad }}" data-turno="{{ inscripcion['turno'] }}">
+    <div class="mail-barra">
+      <strong>Correo enviado</strong>
+      <button type="button" id="cerrar-mail" class="mail-cerrar" aria-label="Cerrar">✕</button>
+    </div>
+
+    <div class="mail-cab">
+      <p class="mail-asunto" id="mail-asunto">Confirmación {{ correo.numero_orden }} — EcoHarmony Park</p>
+      <p><span>De</span> EcoHarmony Park &lt;no-reply@ecoharmonypark.com&gt;</p>
+      <p><span>Para</span> {{ correo.destinatario }}</p>
+    </div>
+
+    <div class="mail-cuerpo">
+      <p>Tu inscripción a <strong>{{ correo.actividad }}</strong> está confirmada para el {{ inscripcion['turno'] }} (hora de Argentina).</p>
+      <ul class="datos">
+        <li><span>Número de orden</span> <strong>{{ correo.numero_orden }}</strong></li>
+        <li><span>Participantes</span> <strong>{{ visitantes|length }}</strong></li>
+      </ul>
+
+      {% for v in visitantes %}
+      <div class="mail-visitante">
+        <img src="{{ v['qr_data_uri'] }}" alt="QR de {{ v['nombre'] }}">
+        <div>
+          <p><strong>{{ v['nombre'] }}</strong></p>
+          <p>DNI {{ v['dni'] }} · Edad {{ v['edad'] }}{% if v['talle'] %} · Talle {{ v['talle'] }}{% endif %}</p>
+          <p class="mail-turno"><strong>{{ correo.actividad }}</strong><br>{{ inscripcion['turno'] }}</p>
+        </div>
+      </div>
+      {% endfor %}
+
+      <p>Presentá el QR de cada participante al comenzar la actividad.</p>
+    </div>
+
+    <div class="mail-adjuntos">
+      <strong>Archivos adjuntos ({{ visitantes|length }})</strong><br>
+      {% for v in visitantes %}
+      <a class="adjunto" href="#" role="button" data-indice="{{ loop.index0 }}"
+         data-archivo="{{ inscripcion['numero_orden'] }}-participante-{{ loop.index }}.png">{{ inscripcion['numero_orden'] }}-participante-{{ loop.index }}.png</a>
+      {% endfor %}
+    </div>
+  </dialog>
+
+  <script src="{{ url_for('static', filename='confirmacion.js') }}" defer></script>
 </body>
 </html>

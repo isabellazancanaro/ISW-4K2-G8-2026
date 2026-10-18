@@ -165,9 +165,6 @@ input[aria-invalid="true"], select[aria-invalid="true"] { border-color: var(--ro
   border-top: 2px dashed var(--lima);
 }
 #bloque-final:disabled { opacity: .65; }
-.lista-qr { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 16px; }
-.entrada-qr { text-align: center; border: 2px solid var(--lima); border-radius: 12px; padding: 16px; }
-.codigo-qr { display: block; width: min(100%, 280px); height: auto; margin: 0 auto 16px; }
 .correo-simulado { margin: 24px 0; padding: 18px; background: var(--crema); border-radius: 12px; overflow-wrap: anywhere; }
 .correo-simulado dt { font-weight: 700; }
 .correo-simulado dd { margin: 0 0 10px; }
@@ -307,3 +304,86 @@ tr:nth-child(even) td { background: #f8f3e2; }
   .tarjeta { padding: 20px 16px; }
   h1 { font-size: 1.5rem; }
 }
+
+
+/* ---------- mail simulado (diálogo) ---------- */
+.mail {
+  width: calc(100% - 2rem);
+  max-width: 640px;
+  max-height: 90vh;
+  padding: 0;
+  overflow: auto;
+  color: var(--texto);
+  background: var(--papel);
+  border: 0;
+  border-radius: var(--radio);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, .35);
+}
+.mail::backdrop { background: rgba(0, 0, 0, .5); }
+.mail-barra {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  color: var(--crema);
+  background: var(--verde-oscuro);
+}
+button.mail-cerrar[type="button"] { padding: 4px 10px; font-size: 1.1rem; background: transparent; }
+button.mail-cerrar[type="button"]:hover:not(:disabled) { background: var(--rojo); }
+.mail-cab { padding: 14px 16px; background: var(--crema); border-bottom: 1px solid #d9d2b8; }
+.mail-cab p { margin: 2px 0; }
+.mail-cab span { display: inline-block; min-width: 3.2rem; font-weight: 700; color: var(--verde-oscuro); }
+.mail-cab .mail-asunto { margin-bottom: 8px; font-size: 1.1rem; font-weight: 900; }
+.mail-cuerpo { padding: 16px; }
+.mail-visitante {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin: 10px 0;
+  padding: 10px;
+  background: #fff;
+  border: 2px solid var(--lima);
+  border-radius: 12px;
+}
+.mail-visitante .mail-turno {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 2px solid #e6dfc6;
+}
+.mail-visitante .mail-turno strong { color: var(--verde-oscuro); }
+.mail-visitante img { width: 120px; height: 120px; flex: none; }
+.mail-visitante p { margin: 2px 0; }
+.mail-adjuntos { padding: 14px 16px; background: #f8f3e2; border-top: 1px solid #e6dfc6; }
+.adjunto {
+  display: inline-block;
+  margin: 6px 8px 0 0;
+  padding: 4px 12px;
+  color: var(--verde-oscuro);
+  font-size: .9rem;
+  text-decoration: none;
+  border: 1px solid var(--verde);
+  border-radius: 999px;
+}
+.adjunto:hover { background: var(--lima); }
+
+[hidden] { display: none !important; }
+
+/* más aire entre el aviso rojo y las cards */
+#aviso-cantidad:not(:empty) { margin-bottom: 20px; }
+
+/* card de visitante + cruz de quitar */
+#visitantes fieldset { position: relative; }
+button.cruz.quitar[type="button"] {
+  position: absolute;
+  top: -8px;
+  right: 2px;
+  width: 30px;
+  height: 30px;
+}
+
+/* botón agregar: chico y a la derecha */
+.acciones-visitantes { display: flex; justify-content: flex-end; }
+button.btn-agregar[type="button"] { padding: 7px 14px; font-size: .9rem; }
+
+h2 { color: var(--verde-oscuro); font-size: 1.3rem; }
+.adjunto { cursor: pointer; }

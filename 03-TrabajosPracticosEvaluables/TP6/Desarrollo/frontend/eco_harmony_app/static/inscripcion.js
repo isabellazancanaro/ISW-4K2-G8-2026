@@ -7,6 +7,8 @@ const cantidad = document.getElementById("cantidad");
 const aviso = document.getElementById("aviso-hora");
 const avisoCantidad = document.getElementById("aviso-cantidad");
 const btnCompletar = document.getElementById("btn-completar");
+const btnAgregar = document.getElementById("btn-agregar");
+const accionesVisitantes = document.getElementById("acciones-visitantes");
 const contenedor = document.getElementById("visitantes");
 const final = document.getElementById("bloque-final");
 const email = document.getElementById("email");
@@ -161,6 +163,12 @@ function mostrarVisitantes(datos = leerVisitantes()) {
     const leyenda = document.createElement("legend");
     leyenda.textContent = `Visitante ${i + 1}`;
     grupo.append(leyenda);
+    const quitar = document.createElement("button");
+    quitar.type = "button";
+    quitar.className = "cruz quitar";
+    quitar.textContent = "✕";
+    quitar.setAttribute("aria-label", `Quitar visitante ${i + 1}`);
+    grupo.append(quitar);
     for (const [nombre, etiqueta] of [["nombre", "Nombre"], ["dni", "DNI"], ["edad", "Edad (años cumplidos)"]]) {
       grupo.append(campo(etiqueta, nombre, datos[nombre]?.[i] || ""));
     }
@@ -179,15 +187,66 @@ function mostrarVisitantes(datos = leerVisitantes()) {
     contenedor.append(grupo);
   }
   final.disabled = false;
+  actualizarBtnAgregar();
+
 }
 btnCompletar.addEventListener("click", () => mostrarVisitantes());
-cantidad.addEventListener("input", () => {
-  final.disabled = true;
-  const valido = validarCantidad();
-  for (const grupo of contenedor.children) grupo.disabled = !valido;
+// "+ Agregar visitante": suma un bloque más, conserva lo ya cargado y sube la cantidad en 1
+function actualizarBtnAgregar() {
+  accionesVisitantes.hidden = contenedor.children.length === 0;
+}
+btnAgregar.addEventListener("click", () => {
+  const n = contenedor.children.length;
+  if (n >= cupos()) {
+    avisoCantidad.textContent = `Podés inscribir hasta ${cupos()} visitantes en este turno.`;
+    return;
+  }
+  cantidad.value = n + 1;
+  mostrarVisitantes();
+  contenedor.lastElementChild.querySelector("input")?.focus();
 });
+
+// Cruz de cada card: quita ese visitante, conserva los datos de los demás y baja la cantidad
+contenedor.addEventListener("click", e => {
+  const boton = e.target.closest(".quitar");
+  if (!boton) return;
+  quitarVisitante(Array.from(contenedor.children).indexOf(boton.closest("fieldset")));
+});
+function quitarVisitante(indice) {
+  const datos = leerVisitantes();
+  for (const clave of Object.keys(datos)) datos[clave].splice(indice, 1);
+  const restantes = contenedor.children.length - 1;
+  if (restantes < 1) {
+    contenedor.replaceChildren();
+    cantidad.value = "";
+    avisoCantidad.textContent = "";
+    final.disabled = true;
+    actualizarBtnAgregar();
+    validarCantidad();
+    cantidad.focus();
+    return;
+  }
+  cantidad.value = restantes;
+  mostrarVisitantes(datos);
+  contenedor.children[Math.min(indice, restantes - 1)].querySelector("input")?.focus();
+}
+
+// Si la cantidad coincide con los visitantes cargados se puede continuar; si no, se avisa
+function sincronizarCantidad() {
+  const valido = validarCantidad();
+  const tarjetas = contenedor.children.length;
+  const coincide = valido && tarjetas > 0 && Number(cantidad.value) === tarjetas;
+  final.disabled = !coincide;
+  for (const grupo of contenedor.children) grupo.disabled = !valido;
+  if (valido && tarjetas > 0 && !coincide) {
+    avisoCantidad.textContent = `La cantidad es distinta a los visitantes ingresados (${tarjetas}). Hacé clic en «Completar datos» o cambiá la cantidad a ${tarjetas}.`;
+  }
+}
+cantidad.addEventListener("input", sincronizarCantidad);
+
 function seleccionarTurno() {
   contenedor.replaceChildren();
+  actualizarBtnAgregar();
   final.disabled = true;
   const disponibles = cupos();
   cantidad.disabled = disponibles < 1;
