@@ -1,5 +1,7 @@
 """Adaptador HTTP del dominio EcoHarmony; estado local a cada aplicación."""
 
+import json
+from pathlib import Path
 from base64 import b64encode
 from datetime import date, datetime, timedelta, timezone
 from threading import RLock
@@ -13,6 +15,8 @@ from ecoharmony.models.visitante import Visitante
 from ecoharmony.talles import TALLES_VALIDOS
 
 from .horarios import dias_inscribibles, horas_inscribibles
+
+TEXTOS_TERMINOS = json.loads(Path(__file__).with_name("terminos.json").read_text(encoding="utf-8"))
 
 ZONA = timezone(timedelta(hours=-3))
 TALLES = tuple(sorted(TALLES_VALIDOS, key=("XS", "S", "M", "L", "XL", "XXL").index))
@@ -55,7 +59,7 @@ def crear_app(config=None):
                 "id": i, "nombre": actividad.nombre,
                 "cupo": actividad.capacidad_maxima, "edad_minima": actividad.edad_minima,
                 "requiere_vestimenta": int(actividad.requiere_talle),
-                "terminos": f"Términos y condiciones de {actividad.nombre} (provisorio; pendiente de validación docente)",
+                "terminos": TEXTOS_TERMINOS[actividad.nombre],
             }
             for i, actividad in enumerate(ACTIVIDADES.values(), 1)
         ]

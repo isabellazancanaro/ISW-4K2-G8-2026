@@ -169,6 +169,10 @@ input[aria-invalid="true"], select[aria-invalid="true"] { border-color: var(--ro
 .correo-simulado dt { font-weight: 700; }
 .correo-simulado dd { margin: 0 0 10px; }
 #terminos-texto {
+  white-space: pre-wrap;
+  max-height: 55vh;
+  overflow-y: auto;
+  overflow-wrap: anywhere;
   margin: 0;
   font-size: .95rem;
 }

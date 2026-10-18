@@ -22,29 +22,21 @@
   <div class="tarjeta confirmacion">
     <div class="ok-icono">✓</div>
     <h1>Inscripción realizada correctamente</h1>
+    <p>Número de orden: <strong>{{ inscripcion['numero_orden'] }}</strong></p>
 
-    <ul class="datos">
-      <li><span>Número de orden</span> <strong>{{ inscripcion['numero_orden'] }}</strong></li>
-      <li><span>Actividad</span> <strong>{{ inscripcion['actividad'] }}</strong></li>
-      <li><span>Turno</span> <strong>{{ inscripcion['turno'] }}</strong></li>
-      <li><span>Email</span> <strong>{{ inscripcion['email'] }}</strong></li>
-    </ul>
-
-    <h2>Visitantes</h2>
-    <div class="tabla-wrap">
-      <table>
-        <tr><th>#</th><th>Nombre</th><th>DNI</th><th>Edad</th><th>Talle</th></tr>
+    <section aria-labelledby="titulo-qr">
+      <h2 id="titulo-qr">QR de los participantes</h2>
+      <div class="lista-qr">
         {% for v in visitantes %}
-        <tr>
-          <td>{{ loop.index }}</td>
-          <td>{{ v['nombre'] or '-' }}</td>
-          <td>{{ v['dni'] }}</td>
-          <td>{{ v['edad'] }}</td>
-          <td>{{ v['talle'] or '-' }}</td>
-        </tr>
+        <article class="entrada-qr">
+          <h3>{{ v['nombre'] }}</h3>
+          <p>DNI {{ v['dni'] }}</p>
+          <img class="codigo-qr" src="{{ v['qr_data_uri'] }}" alt="QR de {{ v['nombre'] }}" width="280" height="280">
+          <a class="btn" href="{{ v['qr_data_uri'] }}" download="qr-participante-{{ loop.index }}.png">Descargar QR</a>
+        </article>
         {% endfor %}
-      </table>
-    </div>
+      </div>
+    </section>
 
     <section class="correo-simulado" aria-labelledby="titulo-correo">
       <h2 id="titulo-correo">Confirmación por correo (simulada)</h2>
@@ -96,7 +88,7 @@
       <strong>Archivos adjuntos ({{ visitantes|length }})</strong><br>
       {% for v in visitantes %}
       <a class="adjunto" href="#" role="button" data-indice="{{ loop.index0 }}"
-         data-archivo="{{ inscripcion['numero_orden'] }}-participante-{{ loop.index }}.png">{{ inscripcion['numero_orden'] }}-participante-{{ loop.index }}.png</a>
+         data-archivo="qr-participante-{{ loop.index }}.png">qr-participante-{{ loop.index }}.png</a>
       {% endfor %}
     </div>
   </dialog>
