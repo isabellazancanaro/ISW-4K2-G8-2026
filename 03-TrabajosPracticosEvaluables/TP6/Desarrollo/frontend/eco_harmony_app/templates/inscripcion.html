@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Inscribirme a actividad</title>
+  <link rel="icon" href="{{ url_for('static', filename='logo.png') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <header class="cabecera">
+    <a href="/">
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="">
+      <span>EcoHarmony <span>Park</span></span>
+    </a>
+  </header>
+
+  <main>
+  <div class="tarjeta">
+  <h1>Inscribirme a actividad</h1>
+  {% if error %}<p class="aviso-info" role="alert" tabindex="-1" id="error-servidor">{{ error }}</p>{% endif %}
+
+  <form method="post" action="/inscripcion" autocomplete="off">
+    <div>
+      <label for="actividad">Actividad</label>
+      <select id="actividad" name="actividad" required>
+        <option value="">-- Seleccioná una actividad --</option>
+        {% for actividad in actividades %}
+        <option value="{{ actividad['nombre'] }}"
+                data-edad-minima="{{ actividad['edad_minima'] }}" data-vestimenta="{{ actividad['requiere_vestimenta'] }}"
+                data-terminos="{{ actividad['terminos'] }}">{{ actividad['nombre'] }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div>
+      <label for="dia">Día</label>
+      <!-- sin name: el día no se envía, viaja dentro del turno -->
+      <select id="dia" required disabled>
+        <option value="">-- Seleccioná un día --</option>
+        {% for valor, etiqueta in dias %}
+        <option value="{{ valor }}">{{ etiqueta }}</option>
+        {% endfor %}
+      </select>
+      {% if not dias %}
+      <p class="aviso-info">No hay días con turnos disponibles en este momento.</p>
+      {% endif %}
+    </div>
+
+    <div>
+      <label for="hora">Horario</label>
+      <select id="hora" name="turno" required disabled>
+        <option value="">-- Seleccioná un horario --</option>
+      </select>
+      <p id="aviso-hora" class="aviso" role="status"></p>
+    </div>
+
+    <div class="fila-cantidad">
+      <div class="campo">
+        <label for="cantidad">Cantidad de visitantes</label>
+        <input type="number" id="cantidad" name="cantidad" min="1" step="1" required aria-describedby="aviso-cantidad" disabled>
+      </div>
+      <button type="button" id="btn-completar" disabled>Completar datos</button>
+    </div>
+
+    <p id="aviso-cantidad" class="aviso" role="status"></p>
+    <div id="visitantes"></div>
+    <div id="acciones-visitantes" class="acciones-visitantes" hidden>
+      <button type="button" id="btn-agregar" class="btn-agregar">+ Agregar visitante</button>
+    </div>
+    <fieldset id="bloque-final" disabled>
+      <div>
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required autocomplete="email">
+      </div>
+
+      <label class="terminos">
+        <input type="checkbox" id="terminos" name="terminos" value="1" required>
+        <span>Acepto los <button type="button" id="btn-terminos" class="link" aria-expanded="false">términos y condiciones</button> de la actividad</span>
+      </label>
+      <div id="terminos-panel" class="terminos-panel" hidden>
+        <div class="terminos-cab">
+          <button type="button" id="cerrar-x" class="cruz" aria-label="Cerrar términos y condiciones">✕</button>
+          <strong>Términos y condiciones</strong>
+        </div>
+        <p id="terminos-texto"></p>
+        <button type="button" id="cerrar-terminos" class="btn-cerrar">Cerrar</button>
+      </div>
+
+      <div>
+        <button type="submit">Inscribirme</button>
+      </div>
+    </fieldset>
+  </form>
+  </div>
+  </main>
+
+  <script id="datos-formulario" type="application/json">{{ {"talles": talles, "valores": valores} | tojson }}</script>
+  <script src="{{ url_for('static', filename='inscripcion.js') }}" defer></script>
+</body>
+</html>

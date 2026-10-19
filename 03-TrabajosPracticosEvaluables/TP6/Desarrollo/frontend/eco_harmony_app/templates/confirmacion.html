@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Inscripción realizada</title>
+  <link rel="icon" href="{{ url_for('static', filename='logo.png') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <header class="cabecera">
+    <a href="/">
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="">
+      <span>EcoHarmony <span>Park</span></span>
+    </a>
+  </header>
+
+  <main>
+  <div class="tarjeta confirmacion">
+    <div class="ok-icono">✓</div>
+    <h1>Inscripción realizada correctamente</h1>
+
+    <ul class="datos">
+      <li><span>Número de orden</span> <strong>{{ inscripcion['numero_orden'] }}</strong></li>
+      <li><span>Actividad</span> <strong>{{ inscripcion['actividad'] }}</strong></li>
+      <li><span>Turno</span> <strong>{{ inscripcion['turno'] }}</strong></li>
+      <li><span>Email</span> <strong>{{ inscripcion['email'] }}</strong></li>
+    </ul>
+
+    <h2>Visitantes</h2>
+    <div class="tabla-wrap">
+      <table>
+        <tr><th>#</th><th>Nombre</th><th>DNI</th><th>Edad</th><th>Talle</th></tr>
+        {% for v in visitantes %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{{ v['nombre'] or '-' }}</td>
+          <td>{{ v['dni'] }}</td>
+          <td>{{ v['edad'] }}</td>
+          <td>{{ v['talle'] or '-' }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+
+    <section class="correo-simulado" aria-labelledby="titulo-correo">
+      <h2 id="titulo-correo">Confirmación por correo (simulada)</h2>
+      <p role="status">Se generó un único correo simulado para <strong>{{ correo.destinatario }}</strong>.</p>
+      <p>Esta demostración no envía emails reales. Podés consultar el contenido del correo y descargar los QR.</p>
+      <button type="button" id="ver-mail">Ver mail</button>
+    </section>
+
+    <p class="acciones"><a class="btn" href="{{ url_for('formulario_inscripcion') }}">Inscribir a otra actividad</a></p>
+    <p class="acciones"><a class="btn btn-claro" href="/">Volver al inicio</a></p>
+  </div>
+  </main>
+
+  <dialog id="mail" class="mail" aria-labelledby="mail-asunto"
+          data-actividad="{{ correo.actividad }}" data-turno="{{ inscripcion['turno'] }}">
+    <div class="mail-barra">
+      <strong>Correo enviado</strong>
+      <button type="button" id="cerrar-mail" class="mail-cerrar" aria-label="Cerrar">✕</button>
+    </div>
+
+    <div class="mail-cab">
+      <p class="mail-asunto" id="mail-asunto">Confirmación {{ correo.numero_orden }} — EcoHarmony Park</p>
+      <p><span>De</span> EcoHarmony Park &lt;no-reply@ecoharmonypark.com&gt;</p>
+      <p><span>Para</span> {{ correo.destinatario }}</p>
+    </div>
+
+    <div class="mail-cuerpo">
+      <p>Tu inscripción a <strong>{{ correo.actividad }}</strong> está confirmada para el {{ inscripcion['turno'] }} (hora de Argentina).</p>
+      <ul class="datos">
+        <li><span>Número de orden</span> <strong>{{ correo.numero_orden }}</strong></li>
+        <li><span>Participantes</span> <strong>{{ visitantes|length }}</strong></li>
+      </ul>
+
+      {% for v in visitantes %}
+      <div class="mail-visitante">
+        <img src="{{ v['qr_data_uri'] }}" alt="QR de {{ v['nombre'] }}">
+        <div>
+          <p><strong>{{ v['nombre'] }}</strong></p>
+          <p>DNI {{ v['dni'] }} · Edad {{ v['edad'] }}{% if v['talle'] %} · Talle {{ v['talle'] }}{% endif %}</p>
+          <p class="mail-turno"><strong>{{ correo.actividad }}</strong><br>{{ inscripcion['turno'] }}</p>
+        </div>
+      </div>
+      {% endfor %}
+
+      <p>Presentá el QR de cada participante al comenzar la actividad.</p>
+    </div>
+
+    <div class="mail-adjuntos">
+      <strong>Archivos adjuntos ({{ visitantes|length }})</strong><br>
+      {% for v in visitantes %}
+      <a class="adjunto" href="#" role="button" data-indice="{{ loop.index0 }}"
+         data-archivo="{{ inscripcion['numero_orden'] }}-participante-{{ loop.index }}.png">{{ inscripcion['numero_orden'] }}-participante-{{ loop.index }}.png</a>
+      {% endfor %}
+    </div>
+  </dialog>
+
+  <script src="{{ url_for('static', filename='confirmacion.js') }}" defer></script>
+</body>
+</html>

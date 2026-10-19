@@ -1,166 +1,147 @@
+# EcoHarmony Park — TP6
 
-# EcoHarmony Park — TP 6 TDD
+## Paso a paso para abrir la web en una computadora nueva
 
-Proyecto de Ingeniería y Calidad de Software — UTN FRC.
+### 1. Instalar los requisitos
 
-**Historia de usuario:** Inscribirme a actividad.
+- **Python 3.12 o superior:** [descargar Python](https://www.python.org/downloads/). En Windows, habilitar la opción de agregar Python al PATH durante la instalación.
+- **Git:** [descargar Git](https://git-scm.com/downloads).
+- Tener conexión a internet para descargar el proyecto y sus dependencias.
 
-## Tecnologías
+Abrir **PowerShell** en Windows o **Terminal** en macOS/Linux y comprobar:
 
-- Python 3.12+
-- pytest
-- Interfaz web responsive (pendiente de implementación)
+```bash
+git --version
+```
 
-## Estructura del proyecto
+Para comprobar Python, usar `py -3 --version` en Windows o `python3 --version`
+en macOS/Linux. La versión debe ser 3.12 o superior.
 
-- `backend/`: lógica de negocio y pruebas automatizadas.
-  - `src/ecoharmony/`: módulos del sistema.
-  - `tests/`: pruebas automatizadas.
-  - `pyproject.toml`: configuración del proyecto Python.
-- `frontend/`: interfaz web responsive (pendiente de desarrollo).
+### 2. Descargar el proyecto y entrar en la carpeta correcta
 
-## Configuración inicial
+Desde la carpeta donde se quiera guardar el repositorio, ejecutar:
 
-Desde la carpeta `Desarrollo`:
+```bash
+git clone --branch feature/tp6-sg4-tdd --single-branch https://github.com/isabellazancanaro/ISW-4K2-G8-2026.git
+cd ISW-4K2-G8-2026/03-TrabajosPracticosEvaluables/TP6/Desarrollo
+```
 
-1. Crear el entorno virtual:
+Los comandos siguientes se ejecutan desde **TP6/Desarrollo**, no desde la raíz
+del repositorio ni desde la carpeta de otro trabajo práctico.
 
-   ```powershell
-   python -m venv .venv
-   ```
+### 3. Preparar el entorno e iniciar la aplicación
 
-2. Instalar las dependencias:
+Elegir los comandos correspondientes al sistema operativo. Se instala el
+backend y el frontend en un mismo entorno; no hay que iniciar dos servidores.
 
-   ```powershell
-   .\.venv\Scripts\python.exe -m pip install -e ".\backend[dev]"
-   ```
-
-3. Ejecutar las pruebas:
-
-   ```powershell
-   .\.venv\Scripts\python.exe -m pytest -v .\backend\tests
-   ```
-
-## Metodología
-
-El backend se desarrolla mediante ciclos RED–GREEN–REFACTOR.
-
-Las pruebas se incorporan incrementalmente y se conserva el historial de Git como evidencia de los ciclos TDD.
-
-El diseño seguirá un enfoque principalmente orientado a objetos, incorporando modelos y responsabilidades progresivamente, sin crear clases innecesarias.
-
-
-## Subgrupo 3 — Inscripción a actividades
-
-### Funcionalidades
-
-El backend permite:
-
-- Registrar inscripciones individuales y grupales.
-- Validar actividades, fechas, horarios y anticipación.
-- Validar cantidad, datos personales, edades y talles.
-- Verificar aceptación de términos y condiciones.
-- Consultar y actualizar los cupos por actividad y turno.
-- Rechazar inscripciones con horarios superpuestos.
-- Rechazar solicitudes grupales completas si algún integrante no cumple los requisitos.
-- Conservar inscripciones confirmadas en memoria.
-- Generar confirmaciones con un código QR por participante.
-- Simular el envío de un único correo al titular.
-
-### Estructura principal
-
-- `inscripciones.py`: servicio central y registro de inscripciones.
-- `superposiciones.py`: detección de conflictos horarios.
-- `confirmaciones.py`: generación de confirmaciones y notificador simulado.
-- `codigos_qr.py`: generación de imágenes QR en formato PNG.
-
-### Instalación
-
-Se requiere Python 3.12 o superior.
-
-Desde la carpeta `Desarrollo`:
+**Windows — PowerShell:**
 
 ```powershell
-py -3.12 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -e ".\backend[dev]"
+py -3 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -e ".\backend[dev,web]"
+.\.venv\Scripts\python.exe -m flask --app frontend.eco_harmony_app.app run --host 127.0.0.1 --port 5001
 ```
 
-### Ejecución de pruebas
+**macOS / Linux:**
+
+```bash
+python3 -m venv .venv
+.venv/bin/python -m pip install -e './backend[dev,web]'
+.venv/bin/python -m flask --app frontend.eco_harmony_app.app run --host 127.0.0.1 --port 5001
+```
+
+No hace falta activar el entorno virtual, instalar Node.js ni crear una base
+de datos. Los comandos utilizan directamente el Python de `.venv`.
+
+### 4. Abrir la página
+
+Cuando la terminal muestre `Running on http://127.0.0.1:5001`, abrir en el navegador:
+
+**[http://127.0.0.1:5001](http://127.0.0.1:5001)**
+
+Mantener la terminal abierta mientras se usa la web. En la página de inicio,
+pulsar **Inscribirme a actividad**, elegir actividad y turno, completar los
+visitantes, ingresar el email del titular y aceptar los términos. Al confirmar,
+se muestran el número de orden, los QR y el botón **Ver mail**.
+
+### 5. Detenerla o volver a abrirla
+
+- Para detener el servidor, presionar **Ctrl+C** en la terminal.
+- Para volver a abrirlo, entrar otra vez en `TP6/Desarrollo` y repetir únicamente
+  el último comando del paso 3, el que ejecuta Flask.
+- Si se cambian archivos Python o plantillas, reiniciar Flask para cargar los cambios.
+- Las reservas y los correos simulados se pierden al reiniciar el servidor.
+
+### Si algo no funciona
+
+| Problema | Solución |
+| --- | --- |
+| No encuentra `.venv/bin/python` o `.venv\Scripts\python.exe` | Comprobar que se está en `TP6/Desarrollo` y crear el entorno con el paso 3. |
+| No encuentra `flask` o `ecoharmony` | Repetir la instalación de `backend[dev,web]` del paso 3. |
+| Puerto 5001 ocupado | Cambiar `--port 5001` por `--port 5002` y abrir `http://127.0.0.1:5002`. |
+| El navegador no conecta | Revisar que Flask siga ejecutándose y que la dirección use el mismo puerto. |
+| No aparecen días o turnos | Solo se puede reservar entre 24 horas y 15 minutos antes del turno. Los lunes, el 1 de enero y el 25 de diciembre el parque está cerrado. Los turnos comienzan de 09:00 a 17:00. Puede no haber opciones según la fecha y hora actuales. |
+| No llega un email | El envío es simulado. El contenido se consulta mediante **Ver mail** en la confirmación. |
+
+## Descripción del proyecto
+
+Trabajo práctico de Ingeniería y Calidad de Software — UTN FRC, Grupo 8.
+Implementa la historia de usuario **«Inscribirme a actividad»** de EcoHarmony Park.
+
+Permite realizar inscripciones individuales y grupales a Tirolesa, Safari,
+Palestra y Jardinería, consultar cupos y validar datos, edades, vestimenta,
+términos y superposiciones. Una solicitud grupal se acepta o rechaza completa.
+La confirmación incluye número de orden, un QR por participante y un correo
+simulado al titular. Las actividades son gratuitas.
+
+### Tecnologías y organización
+
+Backend en Python con enfoque orientado a objetos y pruebas pytest. Frontend
+responsive con Flask, Jinja2, HTML, CSS y JavaScript, usando la paleta del equipo,
+la fuente Lato y el logo. Lato se descarga desde Google Fonts; sin conexión,
+se utiliza la fuente alternativa definida en los estilos.
+
+| Subgrupo | Aporte |
+| --- | --- |
+| 1 | Base del proyecto, catálogo de actividades, calendario, horarios, anticipación y disponibilidad. |
+| 2 | Validaciones de nombre, DNI, edad, talles, términos y cantidad de participantes. |
+| 3 | Inscripciones, consumo de cupos, superposiciones, estado, confirmaciones, QR y correo simulado. |
+| 4 | Pantallas responsive, integración con el backend y verificación manual del flujo web. |
+
+### Estructura
+
+- `backend/src/ecoharmony/`: modelos, reglas de negocio y servicios.
+- `backend/tests/`: pruebas automatizadas de los subgrupos de backend.
+- `backend/pyproject.toml`: configuración y dependencias Python.
+- `frontend/eco_harmony_app/app.py`: aplicación Flask y rutas.
+- `frontend/eco_harmony_app/horarios.py`: opciones de turnos usando las reglas del backend.
+- `frontend/eco_harmony_app/templates/`: pantallas de inicio, inscripción y confirmación.
+- `frontend/eco_harmony_app/static/`: CSS, JavaScript y logo.
+- `frontend/eco_harmony_app/terminos.json`: términos por actividad.
+- `frontend/eco_harmony_app/requirements.txt`: dependencia Flask.
+
+### Pruebas y metodología
+
+El backend se desarrolló mediante ciclos **RED–GREEN–REFACTOR**, conservados en
+el historial Git. Desde `Desarrollo`, ejecutar las 98 pruebas del backend:
+
+**Windows:**
 
 ```powershell
-.\.venv\Scripts\python.exe -m pytest -v .\backend\tests
+.\.venv\Scripts\python.exe -m pytest -q backend/tests
 ```
 
-### Uso del servicio de inscripciones
+**macOS / Linux:**
 
-```python
-from datetime import datetime, timedelta, timezone
-
-from ecoharmony.inscripciones import ServicioInscripciones
-from ecoharmony.models.visitante import Visitante
-from ecoharmony.confirmaciones import (
-    ServicioConfirmaciones,
-    NotificadorSimulado,
-)
-
-zona = timezone(timedelta(hours=-3))
-
-inicio = datetime(2026, 10, 20, 10, 0, tzinfo=zona)
-ahora = datetime(2026, 10, 19, 12, 0, tzinfo=zona)
-
-notificador = NotificadorSimulado()
-confirmaciones = ServicioConfirmaciones(notificador)
-
-servicio = ServicioInscripciones(
-    servicio_confirmaciones=confirmaciones
-)
-
-visitante = Visitante(
-    nombre="Ana García",
-    dni="12345678",
-    edad=20,
-    talle="M",
-)
-
-resultado = servicio.inscribir(
-    actividad="Tirolesa",
-    inicio=inicio,
-    ahora=ahora,
-    cantidad=1,
-    visitantes=[visitante],
-    actividad_terminos="Tirolesa",
-    acepto_terminos=True,
-    email_titular="titular@example.com",
-)
-
-if resultado is not None:
-    print("Inscripción confirmada")
-    print("Cupos restantes:", servicio.consultar_cupos("Tirolesa", inicio))
-    print("Correos simulados:", len(notificador.enviados))
-else:
-    print("Inscripción rechazada")
+```bash
+.venv/bin/python -m pytest -q backend/tests
 ```
 
-### Contrato para el frontend
+El frontend se verifica manualmente desde el navegador.
 
-`ServicioInscripciones.inscribir()` devuelve:
+### Alcance y límites
 
-- Una instancia de `Inscripcion` cuando se confirma correctamente.
-- `None` cuando alguna validación de negocio falla.
-
-`ServicioInscripciones.consultar_cupos(actividad, inicio)` devuelve la cantidad de lugares disponibles.
-
-`ServicioInscripciones.inscripciones` permite consultar las inscripciones registradas.
-
-El correo se envía al titular indicado mediante `email_titular`, utilizando el servicio de confirmaciones configurado.
-
-### Limitaciones
-
-- El almacenamiento es en memoria: los datos no sobreviven al reinicio del proceso.
-- No se utiliza una base de datos real.
-- Los correos se simulan y no se envían a direcciones reales.
-- El frontend debe proporcionar un email del titular.
-- Los términos y condiciones definitivos están pendientes de validación docente.
-- El control de ocupación en memoria no implementa protección frente a inscripciones concurrentes.
-- La gestión de fallos de confirmación revierte el estado local, pero no garantiza una transacción distribuida con un proveedor de correo externo.
-```
+- El almacenamiento es en memoria y no sobrevive al reinicio del proceso.
+- Los correos son simulados; los QR generados son reales y descargables.
+- La configuración local utiliza un único proceso; no comparte reservas entre servidores.
+- La justificación de decisiones de diseño se entrega en el documento externo del equipo.

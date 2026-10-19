@@ -1,0 +1,394 @@
+:root {
+  --verde-oscuro: #386641;
+  --verde: #6a994e;
+  --lima: #a7c957;
+  --crema: #f2e8cf;
+  --rojo: #bc4749;
+  --papel: #fffdf6;
+  --texto: #243a29;
+  --radio: 14px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Lato", system-ui, sans-serif;
+  color: var(--texto);
+  background: var(--crema);
+  line-height: 1.5;
+}
+
+/* ---------- cabecera ---------- */
+.cabecera {
+  background: var(--verde-oscuro);
+  border-bottom: 5px solid var(--lima);
+}
+.cabecera a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 10px 20px;
+  color: var(--crema);
+  text-decoration: none;
+  font-size: 1.25rem;
+  font-weight: 900;
+}
+.cabecera img {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--crema);
+  object-fit: cover;
+}
+.cabecera span span { font-weight: 300; }
+
+/* ---------- contenedor ---------- */
+main {
+  max-width: 760px;
+  margin: 28px auto;
+  padding: 0 16px 40px;
+}
+.tarjeta {
+  background: var(--papel);
+  border-radius: var(--radio);
+  padding: 28px;
+  box-shadow: 0 6px 24px rgba(56, 102, 65, .15);
+}
+h1 {
+  margin: 0 0 20px;
+  color: var(--verde-oscuro);
+  font-size: 1.8rem;
+  font-weight: 900;
+}
+
+/* ---------- campos ---------- */
+form > div, .campo { margin-bottom: 18px; }
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 700;
+  color: var(--verde-oscuro);
+}
+select, input[type="text"], input[type="number"], input[type="email"] {
+  width: 100%;
+  padding: 11px 12px;
+  font: inherit;
+  color: var(--texto);
+  background: #fff;
+  border: 2px solid #d9d2b8;
+  border-radius: 10px;
+  transition: border-color .15s, box-shadow .15s;
+}
+select:focus, input:focus {
+  outline: none;
+  border-color: var(--verde);
+  box-shadow: 0 0 0 4px rgba(167, 201, 87, .45);
+}
+select:disabled, input:disabled, button:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+  background: #efe9d6;
+}
+
+/* cantidad + botón en una fila */
+.fila-cantidad { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+.fila-cantidad .campo { flex: 1; min-width: 140px; margin: 0; }
+.fila-cantidad label { margin-bottom: 6px; }
+
+/* ---------- botones ---------- */
+button, .btn {
+  display: inline-block;
+  padding: 12px 22px;
+  font: inherit;
+  font-weight: 700;
+  color: #fff;
+  background: var(--verde-oscuro);
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background .15s, transform .1s;
+}
+button:hover:not(:disabled), .btn:hover { background: var(--verde); }
+button:active:not(:disabled), .btn:active { transform: translateY(1px); }
+button[type="button"] { background: var(--verde); }
+button[type="button"]:hover:not(:disabled) { background: var(--verde-oscuro); }
+button[type="submit"] { width: 100%; padding: 14px; font-size: 1.05rem; background: var(--verde-oscuro); }
+button[type="submit"]:hover { background: var(--verde); }
+.btn-claro { background: var(--lima); color: var(--verde-oscuro); }
+.btn-claro:hover { background: var(--verde); color: #fff; }
+
+/* ---------- avisos ---------- */
+.aviso {
+  margin: 8px 0 0;
+  color: var(--rojo);
+  font-weight: 700;
+  min-height: 1em;
+}
+.aviso-info {
+  padding: 10px 14px;
+  color: var(--rojo);
+  background: #f9e3e3;
+  border-left: 4px solid var(--rojo);
+  border-radius: 8px;
+}
+.error-campo { color: var(--rojo); font-weight: 700; margin: 6px 0 12px; }
+input[aria-invalid="true"], select[aria-invalid="true"] { border-color: var(--rojo); }
+
+/* ---------- visitantes (los genera el JS) ---------- */
+#visitantes fieldset {
+  margin: 0 0 16px;
+  padding: 14px 16px 6px;
+  background: #fff;
+  border: 2px solid var(--lima);
+  border-radius: 12px;
+}
+#visitantes legend {
+  padding: 2px 12px;
+  color: #fff;
+  font-weight: 700;
+  background: var(--verde);
+  border-radius: 20px;
+}
+#visitantes fieldset div { margin-bottom: 12px; }
+
+/* ---------- bloque final ---------- */
+#bloque-final {
+  border: 0;
+  padding: 18px 0 0;
+  min-width: 0;
+  margin-top: 8px;
+  padding-top: 18px;
+  border-top: 2px dashed var(--lima);
+}
+#bloque-final:disabled { opacity: .65; }
+.correo-simulado { margin: 24px 0; padding: 18px; background: var(--crema); border-radius: 12px; overflow-wrap: anywhere; }
+.correo-simulado dt { font-weight: 700; }
+.correo-simulado dd { margin: 0 0 10px; }
+#terminos-texto {
+  white-space: pre-wrap;
+  max-height: 55vh;
+  overflow-y: auto;
+  overflow-wrap: anywhere;
+  margin: 0;
+  padding: 4px 16px 4px 2px;
+  font-size: .95rem;
+  line-height: 1.65;
+}
+/* más aire entre el email y el checkbox de términos */
+#bloque-final > div { margin-bottom: 22px; }
+#bloque-final > div:last-child { margin-bottom: 0; }
+
+/* panel de términos */
+.terminos-panel {
+  margin: 0 0 18px;
+  padding: 10px 14px 14px;
+  background: var(--crema);
+  border-radius: 10px;
+}
+.terminos-cab {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  color: var(--verde-oscuro);
+}
+button.cruz[type="button"] {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--verde-oscuro);
+  background: transparent;
+  border-radius: 50%;
+}
+button.cruz[type="button"]:hover:not(:disabled) {
+  color: #fff;
+  background: var(--rojo);
+}
+button.btn-cerrar[type="button"] {
+  display: block;
+  margin: 12px 0 0 auto;
+  padding: 8px 20px;
+  color: var(--verde-oscuro);
+  background: var(--lima);
+}
+button.btn-cerrar[type="button"]:hover:not(:disabled) {
+  color: #fff;
+  background: var(--verde);
+}
+.terminos {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0 0 14px;
+  font-weight: 400;
+  color: var(--texto);
+  cursor: pointer;
+}
+.terminos input {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  accent-color: var(--verde-oscuro);
+}
+
+/* botón con aspecto de link */
+button.link[type="button"] {
+  padding: 10px 6px;
+  color: var(--verde);
+  font-weight: 700;
+  text-decoration: underline;
+  background: none;
+  border-radius: 0;
+}
+button.link[type="button"]:hover:not(:disabled) {
+  color: var(--verde-oscuro);
+  background: none;
+}
+button.link[type="button"]:disabled { background: none; }
+
+/* el link dentro de la frase del checkbox: en línea con el texto */
+.terminos button.link[type="button"] {
+  padding: 0;
+  font: inherit;
+  font-weight: 700;
+}
+
+/* ---------- inicio ---------- */
+.hero { text-align: center; padding: 20px 0 10px; }
+.hero img { width: min(260px, 70%); border-radius: 50%; }
+.hero h1 { margin-top: 16px; font-size: 2.2rem; }
+.hero p { margin: 0 0 24px; color: var(--verde); font-size: 1.1rem; }
+.hero .btn { font-size: 1.15rem; padding: 15px 30px; }
+
+/* ---------- confirmación ---------- */
+.ok-icono {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 14px;
+  font-size: 2rem;
+  color: #fff;
+  background: var(--verde);
+  border-radius: 50%;
+}
+.confirmacion h1 { text-align: center; }
+.datos { margin: 0 0 22px; padding: 0; list-style: none; }
+.datos li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #e6dfc6;
+}
+.datos strong { color: var(--verde-oscuro); }
+.tabla-wrap { overflow-x: auto; margin-bottom: 22px; }
+table { width: 100%; border-collapse: collapse; }
+th {
+  padding: 10px;
+  color: #fff;
+  text-align: left;
+  background: var(--verde-oscuro);
+}
+th:first-child { border-radius: 10px 0 0 0; }
+th:last-child { border-radius: 0 10px 0 0; }
+td { padding: 10px; border-bottom: 1px solid #e6dfc6; }
+tr:nth-child(even) td { background: #f8f3e2; }
+.acciones { text-align: center; }
+
+@media (max-width: 520px) {
+  .tarjeta { padding: 20px 16px; }
+  h1 { font-size: 1.5rem; }
+}
+
+
+/* ---------- mail simulado (diálogo) ---------- */
+.mail {
+  width: calc(100% - 2rem);
+  max-width: 640px;
+  max-height: 90vh;
+  padding: 0;
+  overflow: auto;
+  color: var(--texto);
+  background: var(--papel);
+  border: 0;
+  border-radius: var(--radio);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, .35);
+}
+.mail::backdrop { background: rgba(0, 0, 0, .5); }
+.mail-barra {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  color: var(--crema);
+  background: var(--verde-oscuro);
+}
+button.mail-cerrar[type="button"] { padding: 4px 10px; font-size: 1.1rem; background: transparent; }
+button.mail-cerrar[type="button"]:hover:not(:disabled) { background: var(--rojo); }
+.mail-cab { padding: 14px 16px; background: var(--crema); border-bottom: 1px solid #d9d2b8; }
+.mail-cab p { margin: 2px 0; }
+.mail-cab span { display: inline-block; min-width: 3.2rem; font-weight: 700; color: var(--verde-oscuro); }
+.mail-cab .mail-asunto { margin-bottom: 8px; font-size: 1.1rem; font-weight: 900; }
+.mail-cuerpo { padding: 16px; }
+.mail-visitante {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin: 10px 0;
+  padding: 10px;
+  background: #fff;
+  border: 2px solid var(--lima);
+  border-radius: 12px;
+}
+.mail-visitante .mail-turno {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 2px solid #e6dfc6;
+}
+.mail-visitante .mail-turno strong { color: var(--verde-oscuro); }
+.mail-visitante img { width: 120px; height: 120px; flex: none; }
+.mail-visitante p { margin: 2px 0; }
+.mail-adjuntos { padding: 14px 16px; background: #f8f3e2; border-top: 1px solid #e6dfc6; }
+.adjunto {
+  display: inline-block;
+  margin: 6px 8px 0 0;
+  padding: 4px 12px;
+  color: var(--verde-oscuro);
+  font-size: .9rem;
+  text-decoration: none;
+  border: 1px solid var(--verde);
+  border-radius: 999px;
+}
+.adjunto:hover { background: var(--lima); }
+
+[hidden] { display: none !important; }
+
+/* más aire entre el aviso rojo y las cards */
+#aviso-cantidad:not(:empty) { margin-bottom: 20px; }
+
+/* card de visitante + cruz de quitar */
+#visitantes fieldset { position: relative; }
+button.cruz.quitar[type="button"] {
+  position: absolute;
+  top: -8px;
+  right: 2px;
+  width: 30px;
+  height: 30px;
+}
+
+/* botón agregar: chico y a la derecha */
+.acciones-visitantes { display: flex; justify-content: flex-end; }
+button.btn-agregar[type="button"] { padding: 7px 14px; font-size: .9rem; }
+
+h2 { color: var(--verde-oscuro); font-size: 1.3rem; }
+.adjunto { cursor: pointer; }
