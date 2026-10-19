@@ -143,6 +143,5 @@ El frontend se verifica manualmente desde el navegador.
 
 - El almacenamiento es en memoria y no sobrevive al reinicio del proceso.
 - Los correos son simulados; los QR generados son reales y descargables.
-- Los términos del equipo siguen pendientes de validación docente.
 - La configuración local utiliza un único proceso; no comparte reservas entre servidores.
 - La justificación de decisiones de diseño se entrega en el documento externo del equipo.
