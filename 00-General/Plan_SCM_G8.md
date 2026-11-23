@@ -20,7 +20,7 @@ Repositorio del Grupo 8 - Ingeniería y Calidad de Software - 4K2 - 2026
 ```
 ISW-G8-2026/
 ├── 00-General/
-├── 01-Bibliografía/
+├── 01-Bibliografia/
 │   ├── IngenieriaDeSoftware/
 │   ├── SCM/
 │   ├── TestingDeSoftware/
@@ -57,17 +57,20 @@ ISW-G8-2026/
 
 | Ítem de Configuración | Tipo IC | Regla de Nombrado | Ubicación en el Repositorio |
 | :--- | :--- | :--- | :--- |
-| Plan SCM  | Proyecto | Plan_SCM_G8.md | 00-General/ |
-| Programa Asignatura | Proyecto | Programa_Asignatura.pdf | 00-General/ |
-| Pautas de Email | Proyecto | Pautas_Email.pdf | 00-General/ |
-| Bibliografía | Referencia | [Nombre].pdf | 01-Bibliografía/[Tema]/ |
+| Plan SCM  | Gestión | Plan_SCM_G8.md | 00-General/ |
+| Programa Asignatura | Gestión | Programa_Asignatura.pdf | 00-General/ |
+| Pautas de Email | Gestión | Pautas_Email.pdf | 00-General/ |
+| Cronograma Asignatura | Gestión | Cronograma_Asignatura.pdf | 00-General/ |
+| Bibliografía | Referencia | [Nombre].pdf | 01-Bibliografia/[Tema]/ |
 | Presentaciones de Clase | Referencia | [Numero]_[Tema].pdf | 02-PresentacionesClases/ |
-| Consigna TP Evaluable | Iteración | Consigna_TP[Numero].pdf | 03-TrabajosPracticosEvaluables/TP[Numero]/ |
-| Entrega TP Evaluable | Iteración | TP[Numero]_4K2_G8_2026.[ext] | 03-TrabajosPracticosEvaluables/TP[Numero]/Desarrollo/ |
-| Consigna TIG | Iteración | Consigna_TIG[Numero].pdf | 04-TrabajosInvestigacion/TIG[Numero]/ |
-| Entrega TIG | Iteración | TIG[Numero]_4K2_G8_2026.[ext] | 04-TrabajosInvestigacion/TIG[Numero]/ |
+| Enunciados TPs Evaluables | Referencia | Enunciados_TP_Evaluables_2026_2do_Cuatrimestre.pdf | 03-TrabajosPracticosEvaluables/ |
+| Consigna TP Evaluable | Referencia | Consigna_TP[Numero].pdf | 03-TrabajosPracticosEvaluables/TP[Numero]/ |
+| Entrega TP Evaluable | Entregable | TP[Numero]_4K2_G8_2026.[ext] | 03-TrabajosPracticosEvaluables/TP[Numero]/Desarrollo/ |
+| Código Fuente TP Evaluable | Entregable | backend/, frontend/eco_harmony_app/, .gitignore, README.md | 03-TrabajosPracticosEvaluables/TP[Numero]/Desarrollo/ |
+| Lineamientos TIG | Referencia | Lineamientos_Para_Trabajos_De_Investigacion_2026_2C.pdf | 04-TrabajosInvestigacion/ |
+| Entrega TIG | Entregable | TIG[Numero]_4K2_G8_2026.[ext] | 04-TrabajosInvestigacion/TIG[Numero]/ |
 | Templates de Cátedra | Referencia | [NombreTemplate].[ext] | 05-Ejercicios/TemplatesYSoluciones/ |
-| Soluciones de Cátedra | Referencia | Solucion_[Tema].[ext] | 05-Ejercicios/TemplatesYSoluciones/ |
+| Guía de Trabajos Prácticos Resueltos | Referencia | ISW_Guia_De_Trabajos_Practicos_Resueltos.docx.pdf | 05-Ejercicios/TemplatesYSoluciones/ |
 | Ejercicios Prácticos de Alumnos | Soporte | Ejercicio_[Tema]_[NombreEjercicio].[ext] | 05-Ejercicios/Parcial[Numero]/[Apellido] |
 | Resúmenes para Parcial | Soporte | Resumen_[Apellido].[ext] | 06-Estudio/Parcial[Numero]/Resumenes/ |
 | Notas y Apuntes de Clase | Soporte | Notas_[DD-MM]_[Tema]_[Apellido].[ext] | 06-Estudio/Parcial[Numero]/NotasClase/ |
@@ -82,6 +85,7 @@ ISW-G8-2026/
 - ext -> Extensión o formato del ítem de configuración
 - [Apellido] -> Apellido del alumno autor del archivo
 - IC -> Ítem de Configuración
+- Tipo IC -> Gestión (organiza la cursada), Referencia (material de cátedra), Entregable (producido y entregado por el grupo), Soporte (material de estudio individual)
 
 ## Criterio de línea base
 Como grupo definimos establecer una línea base al momento de la entrega de un Trabajo Práctico Evaluable o un Trabajo de Investigación Grupal. 
